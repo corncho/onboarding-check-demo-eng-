@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Hire Onboarding Check</title>
+<script src="demo_backend.js?v=2"></script>
+<style>
+  :root{--ink:#1a2230;--soft:#4a556a;--line:#e3e7ee;--bg:#f6f7fa;--card:#fff;--accent:#1f6feb;--accent-soft:#eaf1fe;--green:#0f7a4d;--green-soft:#e7f4ee;--purple:#6d3fd6;--purple-soft:#f1ecfc;--navy:#16365c;--shadow:0 1px 2px rgba(20,30,50,.04),0 8px 24px rgba(20,30,50,.06)}
+  @media (prefers-color-scheme: dark){:root{--ink:#e8edf6;--soft:#a9b4c8;--line:#2a3345;--bg:#0f1521;--card:#171f2e;--accent:#5b9bff;--accent-soft:#1b2a45;--green:#4cc38a;--green-soft:#15302a;--purple:#a98bf0;--purple-soft:#271f45;--navy:#7fa6e8;--shadow:none}}
+  *{box-sizing:border-box}html,body{margin:0}
+  body{font-family:-apple-system,"Segoe UI",system-ui,Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:960px;margin:0 auto;padding:32px 20px 90px}
+  .brand{display:flex;align-items:center;gap:10px;margin-bottom:26px;font-weight:700}
+  .brand small{display:block;font-weight:500;font-size:12px;color:var(--soft)}
+  .mk{width:32px;height:32px;border-radius:9px;background:linear-gradient(135deg,#1f6feb,#0b3d91);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;flex:none}
+  h1{font-size:30px;line-height:1.2;margin:0 0 10px;letter-spacing:-.02em}
+  h2{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--soft);margin:44px 0 14px}
+  p{margin:0 0 10px;color:var(--soft)}
+  .lead{font-size:17px;max-width:720px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow);padding:22px}
+
+  /* timeline */
+  .tl{display:grid;grid-template-columns:1fr 1fr 1fr;gap:0;position:relative;margin:6px 0 18px}
+  .tl:before{content:"";position:absolute;left:16.6%;right:16.6%;top:16px;height:3px;background:var(--line);border-radius:3px}
+  .tp{position:relative;text-align:center;padding:0 8px}
+  .tp i{display:flex;width:max-content;min-width:64px;height:34px;padding:0 14px;border-radius:99px;margin:0 auto 10px;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:13px;color:#fff;background:#8791a3;position:relative;box-shadow:0 0 0 6px var(--card)}
+  .tp.r1 i,.tp.r2 i{background:var(--navy)}
+  .tp b{display:block;font-size:16px}.tp span{font-size:13px;color:var(--soft)}
+  .rounds{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .rc{border:1px solid var(--line);border-radius:14px;padding:18px 20px;background:var(--card)}
+  .rc.r1,.rc.r2{border-top:5px solid var(--navy)}
+  .rc .tag{font-size:12px;font-weight:800;letter-spacing:.04em;color:var(--navy)}
+  .rc h3{margin:4px 0 2px;font-size:20px}.rc .q{color:var(--soft);font-size:14.5px;margin-bottom:12px}
+  .who{display:flex;gap:10px;align-items:baseline;padding:8px 0;border-top:1px solid var(--line);font-size:14.5px}
+  .who b{flex:0 0 112px}.who b.nh{color:var(--green)}.who b.hm{color:var(--accent)}.who b.ex{color:var(--purple)}.who span{color:var(--soft)}.who em{font-style:normal;color:var(--soft);font-size:12.5px;white-space:nowrap}
+  .who span{flex:1}
+
+  /* how it works */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .st{display:flex;gap:12px}
+  .st .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--accent);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .st b{display:block;font-size:16px}.st span{font-size:14px;color:var(--soft)}
+
+  /* try it */
+  .relay{display:grid;grid-template-columns:1fr 28px 1fr 28px 1fr;align-items:stretch;gap:0}
+  .arr{display:flex;align-items:center;justify-content:center;color:var(--soft)}.arr i{display:block;width:10px;height:10px;border-top:3px solid currentColor;border-right:3px solid currentColor;transform:rotate(45deg)}
+  .p{display:block;text-decoration:none;color:inherit;border:1.5px solid var(--line);border-radius:14px;padding:14px 16px;background:var(--card);transition:.12s;height:100%}
+  .p:hover{border-color:var(--accent);transform:translateY(-1px)}
+  .p em{display:block;font-style:normal;font-size:11.5px;font-weight:800;letter-spacing:.05em;color:var(--accent);margin-bottom:2px}
+  .p b{display:block;font-size:16px}.p span{display:block;font-size:13.5px;color:var(--soft);margin-top:2px}
+  .p.g em{color:var(--green)}.p.x em{color:var(--purple)}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .sub{font-size:13.5px;color:var(--soft);margin:18px 0 8px;font-weight:700}
+  .note{background:var(--accent-soft);border-left:5px solid var(--accent);border-radius:10px;padding:12px 16px;color:var(--ink);font-size:14px;margin-top:16px}
+  .links a{display:inline-block;margin:4px 8px 0 0;padding:10px 16px;border-radius:10px;border:1.5px solid var(--accent);color:var(--accent);text-decoration:none;font-weight:700;font-size:14px}
+  .links a.pri{background:var(--accent);color:#fff}
+
+  @media(max-width:760px){
+    .wrap{padding:22px 16px 90px}h1{font-size:25px}.lead{font-size:16px}
+    .rounds,.steps,.pair{grid-template-columns:1fr}
+    .relay{grid-template-columns:1fr}.arr{height:26px}.arr i{transform:rotate(135deg)}
+    .who{flex-wrap:wrap}.who b{flex:0 0 100%}.who em{white-space:normal}
+    .tp b{font-size:14px}.tp span{font-size:12px}.tp i{min-width:0;padding:0 10px;height:30px;font-size:12px}.tl:before{top:14px}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="brand"><div class="mk">HR</div><div>New Hire Onboarding Check<small>Talent Development Team</small></div></div>
+
+  <h1>Two short check-ins in a new hire's first three months</h1>
+  <p class="lead">We check in with every new hire at Day 30 and Day 90. The goal is to confirm we hired well, see how each person is settling in, and keep improving hiring and onboarding.</p>
+
+  <h2>1. The process at a glance</h2>
+  <div class="card">
+    <div class="tl">
+      <div class="tp"><i>Day 0</i><b>Start date</b><span>New hire joins</span></div>
+      <div class="tp r1"><i>Day 30</i><b>Round 1</b><span>Hiring Quality Check</span></div>
+      <div class="tp r2"><i>Day 90</i><b>Round 2</b><span>Onboarding Check</span></div>
+    </div>
+    <div class="rounds">
+      <div class="rc r1">
+        <div class="tag">ROUND 1 | ABOUT 1 MONTH AFTER JOINING</div>
+        <h3>Did we hire well?</h3>
+        <div class="q">A quick check on the hiring experience and the first month on the job.</div>
+        <div class="who"><b class="nh">New hire</b><span>Short survey</span><em>about 5 min</em></div>
+        <div class="who"><b class="hm">Hiring manager</b><span>Reviews the hire</span><em>about 10 min</em></div>
+      </div>
+      <div class="rc r2">
+        <div class="tag">ROUND 2 | ABOUT 3 MONTHS AFTER JOINING</div>
+        <h3>How are they settling in?</h3>
+        <div class="q">A check on adaptation and performance, finished with an executive sign-off.</div>
+        <div class="who"><b class="nh">New hire</b><span>Survey and self-assessment</span><em>5 to 10 min</em></div>
+        <div class="who"><b class="hm">Hiring manager</b><span>Feedback, then ratings on 7 items</span><em>about 10 min</em></div>
+        <div class="who"><b class="ex">Executive</b><span>Final approval</span><em>about 5 min</em></div>
+      </div>
+    </div>
+  </div>
+
+  <h2>2. How it works for each person</h2>
+  <div class="steps">
+    <div class="st"><div class="n">1</div><div><b>Get an email</b><span>One email with your personal link.</span></div></div>
+    <div class="st"><div class="n">2</div><div><b>Open My Tasks</b><span>Your steps and due dates, all in one place.</span></div></div>
+    <div class="st"><div class="n">3</div><div><b>Finish your steps</b><span>Responses go straight to Talent Development. The next person's step opens automatically.</span></div></div>
+  </div>
+
+  <h2>3. Try it yourself</h2>
+  <p>This demo lets you play each role. All names are fictional, and nothing is saved on a server. Start with Round 2, where the three roles hand off to each other.</p>
+  <div class="sub">Round 2: follow the hand-off in order</div>
+  <div class="relay">
+    <a class="p g" id="a_grace"><em>1. NEW HIRE</em><b>Grace Lee</b><span>Completes the survey and self-assessment.</span></a>
+    <div class="arr"><i></i></div>
+    <a class="p" id="a_james"><em>2. HIRING MANAGER</em><b>James Choi</b><span>Gives feedback, rates 7 items, and requests approval. Also has a Round 1 review.</span></a>
+    <div class="arr"><i></i></div>
+    <a class="p x" id="a_sarah"><em>3. EXECUTIVE</em><b>Sarah Han</b><span>Reviews the ratings and approves.</span></a>
+  </div>
+  <div class="sub">Round 1: a shorter flow</div>
+  <div class="pair">
+    <a class="p g" id="a_daniel"><em>NEW HIRE</em><b>Daniel Kim</b><span>Completes the Round 1 hiring quality survey.</span></a>
+    <a class="p" id="a_james2"><em>HIRING MANAGER</em><b>James Choi</b><span>Reviews Daniel Kim's hire. The same page also lists the Round 2 steps.</span></a>
+  </div>
+  <div class="note">After each submission, the page offers a ready-made email to notify the next person. Use "Reset demo" at the bottom left of any page to start over.</div>
+
+  <h2>4. Guide and sample emails</h2>
+  <div class="links">
+    <a class="pri" href="guide/index.html">Read the process guide</a>
+    <a href="guide/Onboarding_Check_Process_Guide_EN.pdf">Download the guide (PDF)</a>
+    <a href="emails/index.html">See the notification emails</a>
+  </div>
+</div>
+<script>
+  var p = (window.QFDemo && QFDemo.people) || {};
+  var map = {a_grace:'grace', a_james:'james', a_sarah:'sarah', a_daniel:'daniel', a_james2:'james'};
+  Object.keys(map).forEach(function (id) { var el = document.getElementById(id); if (el && p[map[id]]) el.href = 'my_tasks.html?me=' + encodeURIComponent(p[map[id]].token); });
+</script>
+</body>
+</html>

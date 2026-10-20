@@ -1,0 +1,1184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<script src="demo_backend.js?v=2"></script>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Round 2 Review and Executive Approval</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1a2230;--ink-soft:#4a556a;--line:#e3e7ee;--line-soft:#eef1f6;--bg:#f6f7fa;--card:#fff;
+    --accent:#0b3d91;--accent2:#1f6feb;--accent-soft:#eaf1fe;--warn:#b4530a;--ok:#0f7a4d;--ok-soft:#e7f4ee;
+    --gS:#0f7a4d;--gA:#1f6feb;--gB1:#0891b2;--gB:#b4830a;--gC:#c0392b;
+    --mood:#0f7a4d;--mood-soft:#eef8f2;--mood-line:#cdead9;
+    --shadow:0 1px 2px rgba(20,30,50,.04),0 8px 24px rgba(20,30,50,.06);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Pretendard',system-ui,sans-serif;background:var(--bg);color:var(--ink);line-height:1.55;letter-spacing:-.01em;-webkit-font-smoothing:antialiased;word-break:keep-all;overflow-wrap:break-word}
+  
+  .mood,.note,h1,h2,.lead,.item-desc{text-wrap:balance}
+  .wrap{max-width:940px;margin:0 auto;padding:26px 20px 90px}
+  .topbar{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+  .brand{display:flex;align-items:center;gap:10px}
+  .brand .mk{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,#1f6feb,#0b3d91);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px}
+  .brand b{font-size:15px;font-weight:700}.brand span{display:block;font-size:11.5px;color:var(--ink-soft)}
+  .conf{margin-left:auto;font-size:11px;font-weight:800;letter-spacing:.1em;color:var(--warn);border:1px solid #f0d6b8;background:#fdf4e7;border-radius:6px;padding:5px 10px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);padding:26px;margin-bottom:16px}
+  h1{font-size:21px;margin:0 0 4px}.lead{color:var(--ink-soft);font-size:13.5px;margin:0 0 4px}
+  .mood{background:var(--mood-soft);border:1px solid var(--mood-line);border-radius:12px;padding:14px 16px;font-size:13px;color:#1d5c40;margin-bottom:16px;line-height:1.6}
+  .sec-t{font-size:13px;font-weight:800;color:var(--accent);letter-spacing:.02em;margin:2px 0 14px;display:flex;align-items:center;gap:8px}
+  .sec-t .n{width:20px;height:20px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;display:inline-flex;align-items:center;justify-content:center}
+  label.fld{display:block}.lb{font-size:12.5px;font-weight:600;margin-bottom:5px;display:block;color:var(--ink-soft)}
+  input,select,textarea{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:10px 12px;font-size:13.5px;font-family:inherit;color:var(--ink);background:#fff}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent2);box-shadow:0 0 0 3px rgba(31,111,235,.10)}
+  textarea{resize:vertical;min-height:70px}
+  input:disabled,select:disabled,textarea:disabled{background:#f1f3f7;color:#7a8497;cursor:not-allowed;-webkit-text-fill-color:#7a8497;opacity:1}
+  .people.locked{background:#fafbfd}
+  .people .who .lk-tag{font-weight:600;color:var(--ink-soft);margin-left:8px;font-size:11px}
+  .btn.loading{opacity:.85;cursor:progress}
+  .btn.loading::before{content:"";width:13px;height:13px;border:2px solid rgba(255,255,255,.45);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+  body.exec-wait .card:not(#stageBanner){display:none!important}
+  body.exec-wait .actions{display:none!important}
+  .grid{display:grid;gap:12px}
+  .g4{grid-template-columns:repeat(4,1fr)}.g3{grid-template-columns:repeat(3,1fr)}.g2{grid-template-columns:1fr 1fr}
+  .people{border:1px solid var(--line-soft);border-radius:10px;padding:14px;margin-bottom:10px}
+  .people .who{font-size:12px;font-weight:800;color:var(--accent);margin-bottom:10px}
+
+  .cat-band{font-size:12px;font-weight:800;color:#fff;background:var(--accent);border-radius:8px 8px 0 0;padding:8px 14px;margin-top:18px;display:flex;justify-content:space-between}
+  .cat-band .w{opacity:.85;font-weight:600}
+  .item{border:1px solid var(--line);border-top:none;padding:16px 14px}
+  .item:last-of-type{border-radius:0 0 8px 8px}
+  .item-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap}
+  .item-name{font-weight:700;font-size:14px}.item-name .bp{font-size:11.5px;color:var(--ink-soft);font-weight:600;margin-left:6px}
+  .item-desc{font-size:12.5px;color:var(--ink-soft);margin-top:3px;max-width:560px}
+  .earned{font-size:13px;font-weight:800;color:var(--accent);white-space:nowrap;background:var(--accent-soft);border-radius:8px;padding:6px 12px}
+  .scale{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-top:12px}
+  .sc{border:1.5px solid var(--line);border-radius:9px;padding:9px 4px;text-align:center;cursor:pointer;transition:.1s;background:#fff}
+  .sc:hover{border-color:#b9c6e6}.sc.on{border-color:var(--accent2);background:var(--accent-soft);box-shadow:0 0 0 3px rgba(31,111,235,.08)}
+  .sc .v{font-size:16px;font-weight:800}.sc .l{font-size:10.5px;color:var(--ink-soft);margin-top:2px}
+  .sc.on .v{color:var(--accent2)}
+  .crit-toggle{margin-top:10px;font-size:12px;color:var(--accent2);background:none;border:none;cursor:pointer;padding:4px 0;font-weight:600}
+  .crit{display:none;margin-top:8px;border-radius:9px;overflow:hidden;border:1px solid var(--line)}
+  .crit.show{display:block}
+  .crit table{width:100%;border-collapse:collapse;font-size:11.5px}
+  .crit th{background:var(--line-soft);padding:7px 9px;text-align:left;font-weight:700;white-space:nowrap}
+  .crit td{padding:7px 9px;border-top:1px solid var(--line-soft);vertical-align:top}
+  .crit td.s{font-weight:800;white-space:nowrap;width:64px}
+  .crit tr.hl td{background:var(--accent-soft)}
+  .crit td.clmatch{font-weight:600}
+  .crit tr.hl td.clmatch{font-weight:800;color:var(--accent2)}
+  
+  .crit th.clcol{background:#ffe3a3;color:#6b4300}
+  .crit td.clcol{background:#fff3cf}
+  .crit tr.hl td.clcol{background:#ffe08a;color:#1a2230}
+  .crit .clbadge{font-size:10.5px;color:var(--ink-soft);padding:6px 9px;background:#fbfcfe;border-top:1px solid var(--line-soft)}
+  
+  .crit-more{display:none}
+  @media(max-width:720px){
+    .crit table,.crit thead,.crit tbody{display:block}
+    .crit thead{display:none}
+    .crit tr{display:flex;flex-direction:column;padding:10px 12px;border-top:1px solid var(--line-soft)}
+    .crit tr:first-child{border-top:0}
+    .crit td{display:block;border:0;padding:4px 0;font-size:13px;line-height:1.55;background:transparent}
+    .crit td.s{order:-2;width:auto;padding:0 0 4px;font-size:13.5px}
+    .crit td[data-cl]::before{content:attr(data-cl);display:inline-block;min-width:50px;margin-right:6px;font-size:11px;font-weight:800;color:var(--ink-soft)}
+    .crit td.clcol{order:-1;background:#fff3cf;border-radius:7px;padding:6px 8px;margin-bottom:2px}
+    .crit td.clcol::before{color:#6b4300}
+    .crit tr.hl{background:var(--accent-soft)}
+    .crit tr.hl td{background:transparent}
+    .crit tr.hl td.clcol{background:#ffe08a}
+    .critwrap.has-cl:not(.all) td[data-cl]:not(.clcol){display:none}
+    .critwrap.has-cl .crit-more{display:block;width:100%;margin:0;padding:9px 12px;border:0;border-top:1px solid var(--line-soft);background:#fbfcfe;color:var(--accent2);font:inherit;font-size:12.5px;font-weight:700;text-align:left;cursor:pointer}
+  }
+
+  .total-box{display:flex;align-items:center;gap:20px;flex-wrap:wrap;background:linear-gradient(135deg,#0b3d91,#1f6feb);color:#fff;border-radius:12px;padding:22px 24px;margin-top:20px}
+  .total-box .big{font-size:40px;font-weight:800;line-height:1}.total-box .big small{font-size:18px;opacity:.7;font-weight:600}
+  .total-box .lbl{font-size:12px;opacity:.85;margin-bottom:4px}
+  .grade-chip{font-size:30px;font-weight:800;border-radius:12px;padding:10px 22px;background:rgba(255,255,255,.16)}
+  .subtotals{display:flex;gap:22px;margin-left:auto;flex-wrap:wrap}
+  .subtotals div{font-size:12px;opacity:.9}.subtotals b{display:block;font-size:19px;font-weight:800}
+
+  .gradekey{display:flex;gap:6px;flex-wrap:wrap;font-size:11.5px;color:var(--ink-soft);margin-top:12px}
+  .gradekey span{border:1px solid var(--line);border-radius:6px;padding:3px 9px}
+
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;border:none;border-radius:10px;padding:12px 20px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+  .btn.primary{background:var(--accent);color:#fff}.btn.primary:hover{background:#0a336f}
+  .btn.ghost{background:#fff;color:var(--ink);border:1.5px solid var(--line)}.btn.ghost:hover{border-color:#b9c6e6}
+  .actions{display:flex;gap:10px;justify-content:flex-end;margin-top:8px;flex-wrap:wrap}
+  .prog{height:6px;background:var(--line-soft);border-radius:99px;overflow:hidden}
+  .prog i{display:block;height:100%;background:var(--accent2);width:0;transition:width .3s ease}
+  .step-meta{font-size:13px;color:var(--ink-soft);margin-bottom:7px;display:flex;justify-content:space-between;font-weight:600}
+  .err-banner{background:#fdecec;color:#a11;border:1px solid #f6c9c9;border-radius:10px;padding:11px 14px;font-size:13px;margin-top:14px;display:none;line-height:1.6}
+  .err-banner.show{display:block}
+  .missing{border-color:#d33!important;box-shadow:0 0 0 3px rgba(221,51,51,.12)!important}
+  
+  .sum-band{font-size:12.5px;font-weight:800;color:#fff;background:var(--accent);border-radius:8px 8px 0 0;padding:8px 14px;margin-top:16px;display:flex;justify-content:space-between}
+  .sum-band .w{opacity:.85;font-weight:600}
+  .sum-item{border:1px solid var(--line);border-top:none;padding:16px 16px 12px}
+  .sum-top{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+  .sum-name{font-size:18px;font-weight:800;line-height:1.35}
+  .sum-no{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:8px;background:var(--accent);color:#fff;font-size:15px;font-weight:800;margin-right:10px;vertical-align:1px}
+  .sum-name .bp{font-size:13px;color:var(--ink-soft);font-weight:600;margin-left:8px}
+  .sum-score{display:flex;gap:10px;flex-wrap:wrap}
+  .sum-chip{border-radius:10px;padding:7px 16px;background:var(--accent-soft);text-align:center;min-width:104px}
+  .sum-chip small{display:block;font-size:12px;color:var(--ink-soft);font-weight:700}
+  .sum-chip b{display:block;font-size:24px;font-weight:800;color:var(--accent2);line-height:1.2}
+  .sum-chip em{display:block;font-size:12px;font-style:normal;color:var(--ink-soft);font-weight:600}
+  .sum-chip.earn{background:#e9f6ef}.sum-chip.earn b{color:var(--ok)}
+  .sum-desc{font-size:13.5px;color:var(--ink-soft);margin-top:8px;line-height:1.55}
+  .note{font-size:11.5px;color:var(--ink-soft);background:var(--line-soft);border-radius:9px;padding:11px 14px;margin-top:14px;line-height:1.5}
+  .sign-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px}
+  .hidden{display:none!important}
+
+  
+  .mt{--red:#c62828;--red-soft:#fdecec;--warn-soft:#fdf4e7}
+  .mt p{max-width:none}
+  .mt .box{margin-top:20px;text-align:left;border:1.5px solid var(--accent2);border-left-width:6px;background:var(--accent-soft);border-radius:12px;padding:18px 18px 16px}
+  .mt .box.ok{border-color:#bfe3d0;background:var(--ok-soft)}
+  .mt .box h3{font-size:16.5px;font-weight:800;color:var(--accent);margin:0 0 4px}
+  .mt .box.ok h3{color:var(--ok)}
+  .mt .box .lead{font-size:13.5px;color:var(--ink-soft);margin:0 0 12px;line-height:1.6}
+  .mt .alert{margin:0 0 14px;text-align:left;background:var(--red-soft);border:1.5px solid #f0a8a8;border-left-width:6px;border-radius:12px;padding:13px 16px;color:#7a1414;font-size:13.5px;line-height:1.6}
+  .mt .alert b{color:var(--red);font-size:15px}
+  .mt .pg{display:flex;align-items:center;gap:10px;margin:0 0 14px;font-size:12.5px;font-weight:700;color:var(--ink-soft)}
+  .mt .bar{flex:1;height:7px;background:#fff;border-radius:99px;overflow:hidden;border:1px solid var(--line)}
+  .mt .bar i{display:block;height:100%;background:var(--accent2);border-radius:99px}
+  .mt .t{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px 14px;margin-top:9px;flex-wrap:wrap;text-align:left}
+  .mt .t .no{flex:none;width:26px;height:26px;border-radius:8px;background:var(--accent);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+  .mt .t.wait .no{background:#9aa5b8}.mt .t.dn .no{background:var(--ok)}
+  .mt .t .body{flex:1;min-width:220px}
+  .mt .t .ti{font-size:15px;font-weight:800}
+  .mt .t .meta{font-size:12.5px;color:var(--ink-soft);margin-top:3px;line-height:1.7}
+  .mt .chip{display:inline-block;font-size:11.5px;font-weight:800;border-radius:99px;padding:2px 10px;margin-right:6px}
+  .mt .chip.go{background:var(--ok-soft);color:var(--ok)}.mt .chip.wt{background:#eef0f4;color:#5b6678}.mt .chip.dn{background:var(--ok-soft);color:var(--ok)}.mt .chip.due{background:var(--warn-soft);color:var(--warn)}.mt .chip.hot{background:var(--red);color:#fff}
+  .mt .btn.sm{padding:8px 12px;font-size:12.5px}
+  .mt .btn.red{background:var(--red);color:#fff}.mt .btn.red:hover{background:#a51f1f}
+  .mt .btn[disabled]{background:#cfd6e4;color:#fff;cursor:not-allowed}
+  .mt .btn.link{text-decoration:none}
+  .mt .act{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+  
+  @media(max-width:640px){
+    .mt .t{flex-wrap:nowrap;gap:10px;padding:12px}
+    .mt .t .body{min-width:0}
+    .mt .t .act{flex:none;flex-wrap:nowrap}
+    .mt .t .act .btn{white-space:nowrap;padding:9px 11px;font-size:12.5px}
+    .mt .t.wait .act{display:none}
+  }
+  .mt .mtone{white-space:nowrap}   
+  @media(max-width:760px){.mt .mtone{white-space:normal}}
+  .mt ul.mtnote{margin:10px 0 0;padding-left:20px;font-size:12px;color:var(--ink-soft);line-height:1.7}
+  .mt ul.mtnote li+li{margin-top:2px}
+  .mt .grp{margin-top:20px}.mt .grp:first-of-type{margin-top:6px}
+  .mt .grp h3{font-size:13px;font-weight:800;color:var(--ink-soft);margin:0}
+  .mt .grp .gsub{font-size:12.5px;color:var(--ink-soft);margin-top:2px}
+  .mt .sub2{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:13px 14px}
+  .mt .sub2>b{font-size:13.5px}
+  .mt .pv{margin-top:10px;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+  .mt .pvsub{background:#f3f5f9;border-bottom:1px solid var(--line);padding:10px 16px;font-size:12.5px;color:var(--ink-soft);line-height:1.6}
+  .mt .pvsub b{color:var(--ink)}
+  .mt .pvbody{padding:16px;overflow-x:auto}
+  .mt .foot{margin-top:14px;font-size:13px;color:var(--ink-soft)}
+  .mt .foot a{color:var(--accent2);font-weight:700}
+  .mtoast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);background:#1a2230;color:#fff;padding:11px 18px;border-radius:10px;font-size:13px;opacity:0;transition:.2s;pointer-events:none;max-width:90vw;text-align:center;z-index:9}
+  .mtoast.show{opacity:1}
+
+  @media print{
+    body{background:#fff}.wrap{max-width:100%;padding:0}
+    .topbar .conf{display:none}.actions,.crit-toggle{display:none}.crit{display:none!important}
+    .card{box-shadow:none;border:1px solid #ccc;break-inside:avoid;margin-bottom:10px}
+    .total-box{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  }
+  @media(max-width:720px){.g4,.g3{grid-template-columns:1fr 1fr}.scale{grid-template-columns:repeat(5,1fr)}.sc .l{display:none}.subtotals{margin-left:0}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <div class="brand"><div class="mk">HR</div>
+      <div><b>Round 2 Review and Executive Approval</b><span>Round 2 (Day 90), Talent Development Team</span></div></div>
+    <div class="conf">CONFIDENTIAL</div>
+  </div>
+
+  <div class="card" id="stageBanner" style="padding:16px 22px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <span id="stagePill" style="font-size:12px;font-weight:800;color:#fff;background:var(--accent);border-radius:7px;padding:5px 12px"></span>
+    <span id="stageDesc" class="muted" style="font-size:13px"></span>
+    <button id="gotoExecBtn" class="btn ghost" style="margin-left:auto;padding:8px 13px;font-size:12.5px;display:none" onclick="document.getElementById('execCard').scrollIntoView({behavior:'smooth',block:'start'})">Jump to approval</button>
+    <button id="retryBtn" class="btn ghost" style="margin-left:auto;padding:8px 13px;font-size:12.5px;display:none" onclick="location.reload()">Reload</button>
+  </div>
+
+  <div class="card" id="moodCard" style="display:none"><div class="mood" id="moodBox"></div></div>
+
+  
+  <div class="card">
+    <div class="sec-t"><span class="n">1</span>Details</div>
+    <div class="people" id="blkP"><div class="who">New hire</div>
+      <label class="fld" style="margin-top:0"><span class="lb">Department</span>
+        <select id="p_dept_sel" onchange="onDeptSelChange('p')"></select>
+        <input type="text" id="p_dept_other" placeholder="Enter team manually" style="margin-top:6px" class="hidden">
+      </label>
+      <div class="grid g3" style="margin-top:12px">
+        <label class="fld" style="margin-top:0"><span class="lb">Full name</span><input id="p_name"></label>
+        <label class="fld" style="margin-top:0"><span class="lb">Hire date</span><input type="date" id="p_hire"></label>
+        <label class="fld" style="margin-top:0"><span class="lb">Level (CL)</span>
+          <select id="p_cl" onchange="onCLChange()"><option value="">Select</option>
+            <option>CL1</option><option>CL2</option><option>CL3</option><option>CL4</option><option>CL4(p)</option><option>Technical</option><option>Contract</option></select></label>
+      </div></div>
+    <div class="people" id="blkHM"><div class="who">Hiring Manager<span class="lk-tag" id="tagHM"></span></div>
+      <label class="fld" style="margin-top:0"><span class="lb">Department</span>
+        <select id="hm_dept_sel" onchange="onDeptSelChange('hm')"></select>
+        <input type="text" id="hm_dept_other" placeholder="Enter team manually" style="margin-top:6px" class="hidden">
+      </label>
+      <div class="grid g3" style="margin-top:12px">
+        <label class="fld" style="margin-top:0"><span class="lb">Full name</span><input id="hm_name"></label>
+        <label class="fld" style="margin-top:0"><span class="lb">Evaluation date</span><input type="date" id="hm_date"></label>
+        <label class="fld" style="margin-top:0"><span class="lb">Signature (type full name)</span><input id="hm_sign"></label>
+      </div></div>
+    <div class="people" id="blkEX"><div class="who">Executive<span class="lk-tag" id="tagEX"></span></div>
+      <label class="fld" style="margin-top:0"><span class="lb">Department</span><input id="ex_dept"></label>
+      <div class="grid g3" style="margin-top:12px">
+        <label class="fld" style="margin-top:0"><span class="lb">Full name</span><input id="ex_name"></label>
+        <label class="fld" style="margin-top:0"><span class="lb">Evaluation date</span><input type="date" id="ex_date"></label>
+        <label class="fld" style="margin-top:0"><span class="lb">Signature (type full name)</span><input id="ex_sign"></label>
+      </div></div>
+    <div class="note">Select the new hire's level (CL) and the matching column is highlighted in the <b>Rating guide</b> for each item.</div>
+  </div>
+
+  
+  <div class="card" id="hmCard">
+    <div class="sec-t"><span class="n">2</span>Hiring Manager Review</div>
+    <p class="lead" id="hmLead">Rate each item from 1 to 5. Points are calculated automatically from each item's weight. Open the <b>Rating guide</b> under each item to see what each score means at each level.</p>
+    <div id="evalArea"></div>
+
+    <div id="scoreReveal" style="display:none">
+      <div class="total-box">
+        <div><div class="lbl">Total score</div><div class="big"><span id="totalScore">0</span><small>/100</small></div></div>
+        <div class="subtotals">
+          <div>Job Competency <b><span id="subJob">0</span>/70</b></div>
+          <div>Culture and Team Fit <b><span id="subOrg">0</span>/30</b></div>
+        </div>
+      </div>
+    </div>
+
+    <label class="fld" style="margin-top:18px"><span class="lb">Manager comments (please include specific examples)</span>
+      <textarea id="hm_comment" style="min-height:96px"></textarea></label>
+  </div>
+
+  
+  <div class="card" id="execCard">
+    <div class="sec-t"><span class="n">3</span>Executive Approval</div>
+    <label class="fld"><span class="lb">Score (0 to 100, in steps of 10)</span>
+      <input type="number" id="ex_score" min="0" max="100" step="10" oninput="onExecScore()" placeholder="e.g., 90">
+      <div class="hint" id="exGradeTxt" style="font-size:12px;color:var(--ink-soft);margin-top:5px;min-height:18px"></div></label>
+    <input type="hidden" id="ex_grade">
+    <label class="fld" style="margin-top:12px"><span class="lb">Executive comments</span>
+      <textarea id="ex_comment" style="min-height:80px"></textarea></label>
+  </div>
+
+  <div class="card" id="progCard" style="padding:18px 22px">
+    <div class="step-meta"><span id="progLabel">Progress</span><span id="pctTxt">0%</span></div>
+    <div class="prog"><i id="progBar"></i></div>
+    <div class="err-banner" id="errBanner"></div>
+  </div>
+
+  <div class="actions">
+    <button class="btn primary" id="makeLinkBtn" onclick="makeExecLink()">Create approval link</button>
+    <button class="btn primary" id="submitBtn" onclick="submitToSheet()" style="display:none">Approve and submit</button>
+  </div>
+  <div id="linkOut" style="display:none;margin-top:12px"></div>
+</div>
+
+<script>
+
+const SUBMIT_URL='https://demo.invalid/exec';
+
+const _params=new URLSearchParams(location.search);
+let STAGE = _params.get('stage')==='exec' ? 'exec' : 'hm';
+let HM_DATA = null;
+let EXEC_LOAD_FAILED = false;
+let EXEC_NOT_READY = false;
+let ALREADY_DONE = false;   
+
+const _linkCode = _params.get('code');
+
+const ME_TOKEN = (_params.get('me')||'').trim();
+function execKey(){ return STAGE==='exec' ? 'exec' : 'cats'; }
+
+const EXEC_PRE = {성명:(_params.get('ex')||'').trim(), 소속:(_params.get('exdept')||'').trim()};
+(function(){
+  const d=_params.get('d');
+  if(STAGE==='exec' && d){ try{ HM_DATA=decData(d); }catch(e){ STAGE='hm'; } }
+})();
+function decData(str){ str=str.replace(/-/g,'+').replace(/_/g,'/'); while(str.length%4)str+='='; return JSON.parse(decodeURIComponent(escape(atob(str)))); }
+
+const CATS=[
+  {name:'Job Competency', weight:70, items:[
+    {key:'perf', t:'Goal Achievement', bp:25, d:'Delivers assigned work and tasks on time and at the expected standard.'},
+    {key:'expert', t:'Job Expertise', bp:15, d:'Applies prior experience and knowledge to contribute directly to day-to-day work.'},
+    {key:'fit', t:'Role Fit', bp:15, d:'Has the core skills and expertise the role requires.'},
+    {key:'growth', t:'Growth Potential', bp:15, d:'Shows potential to grow into larger roles beyond the current scope.'},
+  ]},
+  {name:'Culture and Team Fit', weight:30, items:[
+    {key:'culture', t:'Culture Fit', bp:10, d:'Respects the company\'s core values and ways of working, and adapts well to the team\'s culture.'},
+    {key:'collab', t:'Collaboration', bp:10, d:'Communicates well with colleagues and partner teams and actively works toward shared goals.'},
+    {key:'respons', t:'Ownership and Reliability', bp:10, d:'Takes ownership of the role and, when problems arise, finds solutions and follows through.'},
+  ]},
+];
+const SCALE=[{v:5,l:'Exceeds expectations'},{v:4,l:'Meets expectations'},{v:3,l:'Partially meets expectations'},{v:2,l:'Below expectations'},{v:1,l:'Unsatisfactory'}];
+const CLCOLS=[['CL1','CL1'],['CL23','CL2/3'],['CL4','CL4'],['CL4p','CL4(p)']];
+
+const DEPT_GROUPS=[
+  {label:'Energy Division', options:[
+    'Energy Division Operations Team','Energy Division Gunsan Plant Safety and Environment Team','Energy Division Safety and Environment Team','Energy Division Safety and Environment Planning Team',
+    'Energy Division Engineering Team','Energy Division Power Development Team',
+    'Energy Division New Business Development Fuel Sourcing Team','Energy Division New Business Development Team',
+    'Energy Division Yeosu Plant Y TF'
+  ]},
+  {label:'Convergence Division', options:[
+    'Convergence Division FA Business SY Business Team','Convergence Division FA Business SF Business Team','Convergence Division Ocean Automation TF',
+    'Convergence Division GEP Korea Development Team','Convergence Division Management Support System Solutions Team','Convergence Division Management Support Green Energy Business Team','Convergence Division Management Support Procurement Team',
+    'Convergence Division SI Business Solutions Team 1','Convergence Division SI Business Solutions Team 2','Convergence Division SI Business Solutions Team 3',
+    'Convergence Division R&D Center Solution Development Team 1','Convergence Division R&D Center Solution Development Team 2',
+    'Convergence Division Safety and Environment Team','Convergence Division Planning Team'
+  ]}
+];
+const DEPT_ALL=DEPT_GROUPS.flatMap(g=>g.options);
+function buildDeptSelects(){
+  const optsHTML='<option value="">Select</option>'+DEPT_GROUPS.map(g=>`<optgroup label="${g.label}">${g.options.map(o=>`<option>${o}</option>`).join('')}</optgroup>`).join('')+'<option value="__other__">Other (type in)</option>';
+  ['p','hm'].forEach(prefix=>{ const el=document.getElementById(prefix+'_dept_sel'); if(el) el.innerHTML=optsHTML; });
+}
+function onDeptSelChange(prefix){
+  const sel=document.getElementById(prefix+'_dept_sel'), other=document.getElementById(prefix+'_dept_other');
+  other.classList.toggle('hidden', sel.value!=='__other__');
+  if(sel.value==='__other__') other.focus();
+}
+function getDept(prefix){
+  const sel=document.getElementById(prefix+'_dept_sel');
+  if(!sel) return '';
+  return sel.value==='__other__' ? (document.getElementById(prefix+'_dept_other').value||'').trim() : sel.value;
+}
+function setDept(prefix, val, disable){
+  const sel=document.getElementById(prefix+'_dept_sel'), other=document.getElementById(prefix+'_dept_other');
+  if(!sel) return;
+  if(val){
+    
+    if(!DEPT_ALL.includes(val) && !Array.from(sel.options).some(o=>o.value===val)){
+      const opt=document.createElement('option'); opt.value=val; opt.textContent=val;
+      sel.insertBefore(opt, sel.querySelector('option[value="__other__"]'));
+    }
+    sel.value=val; other.value=''; other.classList.add('hidden');
+  }else{
+    sel.value=''; other.value=''; other.classList.add('hidden');
+  }
+  sel.disabled=!!disable; other.disabled=!!disable;
+}
+
+
+const CRIT={
+ perf:{
+  5:{CL1:"Completes complex, higher-level tasks ahead of schedule, well beyond the assigned scope",CL23:"Independently delivers high-quality results beyond expectations and lifts team performance",CL4:"Transforms how the department works and raises productivity significantly",CL4p:"Sets the direction for the business and delivers major results from a strategic perspective"},
+  4:{CL1:"Completes assigned work accurately and reliably within the deadline",CL23:"Takes tasks from start to finish without extra guidance",CL4:"Uses deep expertise to build practical processes and frameworks",CL4p:"Leads the company-wide use of business and technology and delivers results"},
+  3:{CL1:"Gets the work done, but at a slower pace, and the output often needs rework",CL23:"Deadlines are inconsistent and some guidance from a superior is needed",CL4:"Focuses on personal hands-on work rather than building processes",CL4p:"Delivers results mainly at the division level rather than company-wide"},
+  2:{CL1:"Work is repeatedly late and deliverables need frequent rework, so close management is required",CL23:"Needs a superior's involvement to finish their own work due to limited proficiency",CL4:"Lacks the ability to build frameworks and ends up slowing the whole team down",CL4p:"Weak strategic decisions have caused real business losses"},
+  1:{CL1:"Work performance is far below the bar and instructions are not carried out",CL23:"Cannot manage their own work, disrupting the whole team's workflow",CL4:"Lacks the expertise to carry out expert-level work",CL4p:"Poor decisions cause serious losses to the company, and the issues go unaddressed"}},
+ expert:{
+  5:{CL1:"Proactively learns the knowledge expected at higher levels and applies it on the job",CL23:"Independently solves technical problems the team struggles with",CL4:"Has advisor-level expertise that even outside parties seek out",CL4p:"Sets new industry standards or leads the market with their expertise"},
+  4:{CL1:"Has solid foundational job knowledge and performs the work without difficulty",CL23:"Plans and manages their own work and schedule with confidence",CL4:"Uses expertise to lead juniors and peers on job matters",CL4p:"Brings top-tier, externally recognized methods into the organization"},
+  3:{CL1:"Knows the theory but is still developing the ability to apply it in practice",CL23:"Tends to rely on a superior's decisions rather than making independent judgments",CL4:"Applies their own knowledge but does not turn it into shared assets or lead others",CL4p:"Uses existing in-house knowledge rather than leading the industry"},
+  2:{CL1:"Gaps in basic knowledge lead to frequent small errors in practice",CL23:"Relies on a superior even for minor decisions",CL4:"Does not inspire technical confidence and cannot lead peers as an expert",CL4p:"Cannot present sound methods and has not established credibility as an expert"},
+  1:{CL1:"Shows no willingness to learn the job and no improvement even after training",CL23:"Lack of practical skill creates a risk of tangible or intangible loss to the company",CL4:"Lacks expert capability, so mentoring and technical guidance are not possible",CL4p:"Lacks strategic expertise and falls far short of the purpose of the hire"}},
+ fit:{
+  5:{CL1:"Masters the new work environment, tools, and technology right from the start",CL23:"Recognized as an in-house expert in the field and leads key projects",CL4:"Designs new business initiatives for the division with unmatched expertise",CL4p:"Makes strategic proposals that can reshape the company's portfolio"},
+  4:{CL1:"Works hard to learn the organization's job knowledge and in-house technology",CL23:"Could give an internal talk or training in their job area",CL4:"Proposes new work or projects and leads them professionally",CL4p:"Has real influence on company-wide strategy and policy decisions"},
+  3:{CL1:"Is adapting, but is slower than expected to apply technology and take on real work",CL23:"A good fit, but contributes at an average level",CL4:"Proposals stay within a narrow job scope and are tentative",CL4p:"Mostly proposes practical improvements rather than policy"},
+  2:{CL1:"Slow to get up to speed, so real work assignments keep getting delayed",CL23:"Has difficulty explaining their work logically, which lowers trust",CL4:"Stays passive and does not propose new work",CL4p:"Struggles to use decision-making authority even when it is given"},
+  1:{CL1:"The gap between expected and actual skills is too large to assign work",CL23:"Has not adapted at all and is lowering the team's level of expertise",CL4:"Does not propose ideas, drains the team's energy, and runs counter to the purpose of the hire",CL4p:"Cannot execute strategy; a failed hire with very high personnel risk"}},
+ growth:{
+  5:{CL1:"Takes on challenging higher-level work and shows strong growth potential",CL23:"Plays a key role in raising the capability of the whole department",CL4:"Designs the department's future technology roadmap and sets long-term direction",CL4p:"Has influence strong enough to change how the whole industry develops talent"},
+  4:{CL1:"Invests in self-development and actively takes on new, challenging tasks",CL23:"Coaches and mentors juniors using their own know-how",CL4:"Builds the department's training system and helps assess talent as an interviewer",CL4p:"Spreads expertise company-wide and proposes new HR and organizational programs"},
+  3:{CL1:"Grows only with a superior's guidance and rarely stretches on their own",CL23:"Somewhat reluctant to support others, such as coaching juniors or sharing knowledge",CL4:"Rarely takes part in hiring or development activities and focuses on their own work",CL4p:"Supports training within the department but not company-wide"},
+  2:{CL1:"Shows little drive to grow and tends to avoid difficult or new work",CL23:"Does not share knowledge, focuses only on their own work, and shows no interest in others' growth",CL4:"Does not help improve department systems or development, and appears stagnant",CL4p:"Lacks the potential to propose new development models or systems"},
+  1:{CL1:"Shows no sign of development potential and strongly resists change",CL23:"Is rigid, holds back juniors' growth, or refuses to share knowledge",CL4:"Lacks leadership qualities and weakens the organization's future competitiveness",CL4p:"Lack of leadership is severe enough to harm the company's industry reputation"}},
+ culture:{
+  5:{CL1:"Lives the organization's values and is a positive role model for colleagues",CL23:"Plays a key role in keeping the whole team energized and positive",CL4:"Improves the team's ways of working and makes the changes stick",CL4p:"Embeds the company's core values in systems and policies"},
+  4:{CL1:"Respects the company's ways of working and culture, and adapts steadily",CL23:"Shares responsibility for results with teammates and works well with them",CL4:"Introduces new methods and applies them in actual organizational practice",CL4p:"Takes the lead in making sound decisions aligned with company strategy"},
+  3:{CL1:"Is adapting to the culture, but communicates passively and still feels like an outsider",CL23:"Tends to put personal results ahead of shared responsibility",CL4:"Holds on to existing ways and is slow to accept organizational change",CL4p:"Decisions sometimes conflict with company strategy and direction"},
+  2:{CL1:"Insists on the previous employer's ways and often creates cultural friction",CL23:"Does not own up to mistakes and tends to deflect or make excuses",CL4:"Lacks a leader's sense of responsibility and weakens discipline and morale",CL4p:"Lack of leadership seriously undermines the organization's values"},
+  1:{CL1:"Acts against core values and seriously damages organizational discipline",CL23:"Shifts blame and creates conflict, making it impossible to work well with teammates",CL4:"Is authoritarian and rigid, rejecting the organization's culture",CL4p:"Unilateral decisions completely break down organizational discipline"}},
+ collab:{
+  5:{CL1:"An outstanding partner that other departments want to work with",CL23:"Takes the lead in resolving complex, sensitive conflicts between departments",CL4:"Designs, coordinates, and leads company-wide collaboration frameworks",CL4p:"Aligns many internal and external stakeholders and maximizes results"},
+  4:{CL1:"Communicates openly and actively with colleagues and superiors, like a professional",CL23:"Works smoothly with partner teams and supports colleagues when needed",CL4:"Shares responsibility for colleagues' work and actively supports it",CL4p:"Follows through on responsibility for their own decisions"},
+  3:{CL1:"Communicates only when the work requires it and stays somewhat passive",CL23:"Communicates selectively, mainly when their own interests are involved",CL4:"Concentrates on their own responsibilities rather than supporting colleagues",CL4p:"Follows up on decisions less than peers do"},
+  2:{CL1:"Poor communication causes frequent friction and mistakes in collaboration",CL23:"Puts their own team or personal interests far ahead of cooperation",CL4:"Leans on expert authority and blames or dismisses colleagues",CL4p:"Self-righteous decisions damage well-established cross-department collaboration"},
+  1:{CL1:"A domineering, uncooperative attitude hurts team morale and collaboration",CL23:"Cuts off communication, deepening conflicts with partner teams and blocking work",CL4:"Deliberately undermines collaboration and openly ignores colleagues",CL4p:"Makes company-wide collaboration impossible and harms the organization"}},
+ respons:{
+  5:{CL1:"Takes ownership and gives their best even when no one is watching",CL23:"Raises the whole team's diligence and professionalism",CL4:"Takes responsibility for the department's setbacks and leads the recovery",CL4p:"Acts as a strategic safeguard in company-wide crises and takes responsibility"},
+  4:{CL1:"Shows strong commitment to completing the assigned role",CL23:"Shares accountability for results with superiors, and can be relied on",CL4:"Takes full responsibility for all results as a job expert",CL4p:"Takes responsibility to the end for the company-wide impact of decisions"},
+  3:{CL1:"Attendance is good, but ownership and engagement are somewhat lacking",CL23:"Avoids or reacts passively when facing obstacles instead of resolving them",CL4:"Sense of responsibility stays within a narrow area of assigned work",CL4p:"Focuses on execution, with less ownership of the wider impact of results"},
+  2:{CL1:"Lacks the will to see work through, so gives up midway or delays",CL23:"Takes deadlines lightly and avoids responsibility for poor results",CL4:"Often shows a lack of accountability that makes it hard to earn trust as an expert",CL4p:"Ignores strategic impact and disowns results"},
+  1:{CL1:"Neglects work or does not follow basic attendance rules, such as arriving late",CL23:"Shows no professionalism, such as manipulating results or making false reports",CL4:"Deliberate slacking or insincerity harms the whole team",CL4p:"Ethical lapses cause enormous losses to the company"}},
+};
+
+const scores={};
+const esc=s=>(s??'').toString().replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));
+function clGroup(){const v=document.getElementById('p_cl').value; if(v==='CL1')return'CL1'; if(v==='CL2'||v==='CL3')return'CL23'; if(v==='CL4')return'CL4'; if(v==='CL4(p)')return'CL4p'; return null;}
+function grade(t){return t>=95?'S':t>=90?'A':t>=80?'B+':t>=70?'B':'C';}
+function gradeColor(g){return{S:'var(--gS)',A:'var(--gA)','B+':'var(--gB1)',B:'var(--gB)',C:'var(--gC)'}[g]||'#fff';}
+
+function buildEval(){
+  let html='';
+  CATS.forEach(cat=>{
+    html+=`<div class="cat-band">${esc(cat.name)}<span class="w">${cat.weight} points</span></div>`;
+    cat.items.forEach(it=>{
+      html+=`<div class="item" id="item_${it.key}">
+        <div class="item-head">
+          <div><div class="item-name">${esc(it.t)}<span class="bp">(${it.bp} pts)</span></div>
+            <div class="item-desc">${esc(it.d)}</div></div>
+          <div class="earned" id="earn_${it.key}">0 / ${it.bp}</div>
+        </div>
+        <div class="scale">${SCALE.map(s=>`
+          <div class="sc" id="sc_${it.key}_${s.v}" onclick="pick('${it.key}',${s.v})">
+            <div class="v">${s.v}</div><div class="l">${esc(s.l)}</div></div>`).join('')}</div>
+        <button class="crit-toggle" onclick="toggleCrit('${it.key}')">Rating guide &#9662;</button>
+        <div class="crit" id="crit_${it.key}">${critTable(it.key)}</div>
+      </div>`;
+    });
+  });
+  document.getElementById('evalArea').innerHTML=html;
+}
+function critTable(key){
+  const g=clGroup();
+  let rows='';
+  [5,4,3,2,1].forEach(sv=>{
+    const cells=CLCOLS.map(([code,lbl])=>`<td data-cl="${lbl}"${g===code?' class="clmatch clcol"':''}>${esc(CRIT[key][sv][code])}</td>`).join('');
+    rows+=`<tr class="${scores[key]===sv?'hl':''}" data-s="${sv}"><td class="s">${sv} pt</td>${cells}</tr>`;
+  });
+  const head=CLCOLS.map(([code,lbl])=>`<th${g===code?' class="clcol"':''}>${lbl}</th>`).join('');
+  return `<div class="critwrap${g?' has-cl':''}"><table><thead><tr><th>Score</th>${head}</tr></thead><tbody>${rows}</tbody></table>
+    <button type="button" class="crit-more" onclick="const w=this.closest('.critwrap');w.classList.toggle('all');this.textContent=w.classList.contains('all')?'Show this level only':'Compare all levels'">Compare all levels</button>
+    <div class="clbadge">${g?'Highlighted: the new hire\'s level ('+document.getElementById('p_cl').value+').':(document.getElementById('p_cl').value==='Contract'?'Contract staff have no level (CL). Please refer to all columns.':'Select a level (CL) to highlight the matching column.')}</div></div>`;
+}
+function toggleCrit(key){document.getElementById('crit_'+key).classList.toggle('show');}
+function pick(key,v){
+  scores[key]=v;
+  CATS.flatMap(c=>c.items).forEach(it=>{if(it.key===key){
+    [5,4,3,2,1].forEach(s=>document.getElementById(`sc_${key}_${s}`).classList.toggle('on',s===v));
+    const earned=it.bp*v/5; document.getElementById('earn_'+key).textContent=`${earned} / ${it.bp}`;
+  }});
+  const box=document.getElementById('crit_'+key);
+  box.querySelectorAll('tr[data-s]').forEach(tr=>tr.classList.toggle('hl',Number(tr.dataset.s)===v));
+  recalc();
+}
+function recalc(){
+  let job=0,org=0;
+  CATS.forEach(cat=>cat.items.forEach(it=>{
+    const v=scores[it.key]; if(!v) return;
+    const e=it.bp*v/5; if(cat.name==='Job Competency') job+=e; else org+=e;
+  }));
+  const total=job+org;
+  document.getElementById('subJob').textContent=job;
+  document.getElementById('subOrg').textContent=org;
+  document.getElementById('totalScore').textContent=total;
+  updateProgress();
+}
+
+function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2); }
+function requiredItems(){
+  const v=id=>{ const el=document.getElementById(id); return el?String(el.value||'').trim():''; };
+  const L=[];
+  if(STAGE==='hm'){
+    L.push(['New hire department',getDept('p'),'p_dept_sel'],['New hire name',v('p_name'),'p_name'],['New hire hire date',v('p_hire'),'p_hire'],['New hire level (CL)',v('p_cl'),'p_cl']);
+    CATS.flatMap(c=>c.items).forEach((it,i)=>L.push([(i+1)+'. '+it.t+' rating',scores[it.key]||'','item_'+it.key]));
+    L.push(['Hiring manager department',getDept('hm'),'hm_dept_sel'],['Hiring manager name',v('hm_name'),'hm_name'],['Hiring manager evaluation date',v('hm_date'),'hm_date'],['Hiring manager signature',v('hm_sign'),'hm_sign'],['Hiring manager comments',v('hm_comment'),'hm_comment']);
+  }else{
+    L.push(['Executive department',v('ex_dept'),'ex_dept'],['Executive name',v('ex_name'),'ex_name'],['Executive evaluation date',v('ex_date'),'ex_date'],['Executive signature',v('ex_sign'),'ex_sign'],['Executive score',v('ex_score'),'ex_score'],['Executive comments',v('ex_comment'),'ex_comment']);
+  }
+  return L;
+}
+function updateProgress(){
+  const L=requiredItems(), done=L.filter(x=>x[1]!=='').length, pct=L.length?Math.round(done/L.length*100):0;
+  const bar=document.getElementById('progBar'), txt=document.getElementById('pctTxt'), lb=document.getElementById('progLabel');
+  if(bar) bar.style.width=pct+'%';
+  if(txt) txt.textContent=pct+'%';
+  if(lb) lb.textContent=(STAGE==='hm'?'Step 1: Hiring manager review ':'Step 2: Executive approval ')+'progress ('+done+' / '+L.length+')';
+}
+function clearMissing(){
+  document.querySelectorAll('.missing').forEach(e=>e.classList.remove('missing'));
+  const b=document.getElementById('errBanner'); if(b) b.classList.remove('show');
+}
+
+function blockIfMissing(){
+  const miss=requiredItems().filter(x=>x[1]==='');
+  clearMissing();
+  if(!miss.length) return false;
+  miss.forEach(m=>{ const el=document.getElementById(m[2]); if(el) el.classList.add('missing'); });
+  const b=document.getElementById('errBanner');
+  b.innerHTML='<b>'+miss.length+(miss.length===1?' item is':' items are')+' still missing.</b> Please complete everything to continue.<br>'+miss.map(m=>esc(m[0])).join(', ');
+  b.classList.add('show');
+  const first=document.getElementById(miss[0][2]); if(first) first.scrollIntoView({behavior:'smooth',block:'center'});
+  return true;
+}
+document.addEventListener('input',()=>{ clearMissing(); updateProgress(); });
+document.addEventListener('change',()=>{ clearMissing(); updateProgress(); });
+function onCLChange(){
+  CATS.flatMap(c=>c.items).forEach(it=>{
+    const box=document.getElementById('crit_'+it.key);
+    if(!box)return;
+    const wasOpen=box.classList.contains('show');
+    box.innerHTML=critTable(it.key); if(wasOpen)box.classList.add('show');
+  });
+}
+function onExecScore(){
+  const v=document.getElementById('ex_score').value;
+  const el=document.getElementById('ex_grade');
+  const tx=document.getElementById('exGradeTxt');
+  if(v===''||isNaN(v)){el.value='';if(tx)tx.textContent='';return;}
+  const n=Math.max(0,Math.min(100,Number(v)));
+  el.value=grade(n)+' grade';
+  if(tx)tx.textContent='Grade: '+grade(n)+' (S: 95-100, A: 90-94, B+: 80-89, B: 70-79, C: below 70)';
+}
+
+
+function showMood(){
+  const name=document.getElementById('p_name').value.trim();
+  const box=document.getElementById('moodCard');
+  const txt=document.getElementById('moodBox');
+  const who=name||'the new hire';
+  txt.textContent = STAGE==='hm'
+    ? `Thank you for supporting ${who} during onboarding. Your review helps us support ${who}'s growth.`
+    : `Thank you for giving the final approval on the hiring manager's review of ${who}.`;
+  box.style.display='block';
+}
+
+
+function execFields(){
+  const g=id=>document.getElementById(id).value;
+  return {소속:g('ex_dept'),성명:g('ex_name'),평가일:g('ex_date'),서명:g('ex_sign'),점수:g('ex_score'),등급:g('ex_grade'),의견:g('ex_comment')};
+}
+function collect(){
+  const g=id=>document.getElementById(id).value;
+  if(STAGE==='exec' && HM_DATA){
+    const base=JSON.parse(JSON.stringify(HM_DATA));
+    base._type='approval';
+    base.담당임원=execFields();
+    base.제출시각=new Date().toLocaleString('en-US');
+    return base;
+  }
+  const items={}; CATS.flatMap(c=>c.items).forEach(it=>{
+    const v=scores[it.key]||''; items[it.t]={선택:v, 취득:v?it.bp*v/5:'', 배점:it.bp};
+  });
+  let job=0,org=0; CATS.forEach(c=>c.items.forEach(it=>{const v=scores[it.key];if(v){const e=it.bp*v/5;c.name==='Job Competency'?job+=e:org+=e;}}));
+  const total=job+org;
+  return {
+    _type:'approval', 제출시각:new Date().toLocaleString('en-US'),
+    입사자:{소속:getDept('p'),성명:g('p_name'),입사일:g('p_hire'),직급:g('p_cl')},
+    팀장:{소속:getDept('hm'),성명:g('hm_name'),평가일:g('hm_date'),서명:g('hm_sign'),의견:g('hm_comment')},
+    담당임원:execFields(), 담당임원예정:{소속:EXEC_PRE.소속,성명:EXEC_PRE.성명},
+    팀장평가:items, 직무역량점수:job, 조직적응점수:org, 총점:total, 등급:grade(total)
+  };
+}
+
+function toFlatRecord(d){
+  const itemKeyMap={'Goal Achievement':25,'Job Expertise':15,'Role Fit':15,'Growth Potential':15,'Culture Fit':10,'Collaboration':10,'Ownership and Reliability':10};
+  const rec={
+    '입사자_소속': d.입사자.소속||'', '입사자_성명': d.입사자.성명||'',
+    '입사일': d.입사자.입사일||''
+  };
+  Object.keys(itemKeyMap).forEach(name=>{
+    const bp=itemKeyMap[name];
+    const it=(d.팀장평가||{})[name]||{};
+    rec[`${name}_선택`]=it.선택??'';
+    rec[`${name}_취득(배점${bp})`]=it.취득??'';
+  });
+  rec['직무역량(70)']=d.직무역량점수??'';
+  rec['조직적응(30)']=d.조직적응점수??'';
+  rec['총점']=d.총점??'';
+  rec['팀장환산등급']=d.등급||'';
+  rec['팀장_소속']=d.팀장?.소속||'';
+  rec['팀장_성명']=d.팀장?.성명||'';
+  rec['팀장_평가일']=d.팀장?.평가일||'';
+  rec['팀장_의견']=d.팀장?.의견||'';
+  rec['팀장_서명']=d.팀장?.서명||'';
+  rec['임원_소속']=d.담당임원?.소속||'';
+  rec['임원_성명']=d.담당임원?.성명||'';
+  rec['임원_평가일']=d.담당임원?.평가일||'';
+  rec['임원_점수']=d.담당임원?.점수||'';
+  rec['임원_등급']=d.담당임원?.등급||'';
+  rec['임원_의견']=d.담당임원?.의견||'';
+  rec['임원_서명']=d.담당임원?.서명||'';
+  return rec;
+}
+function saveJSON(){
+  const d=collect();
+  dl(new Blob([JSON.stringify(d,null,2)],{type:'application/json'}), `Approval_${d.입사자.성명||'NewHire'}.json`);
+}
+function dl(blob,name){const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();}
+
+
+function linkClosedNow(){
+  return new Promise(resolve=>{
+    if(!_linkCode||!SUBMIT_URL){ resolve(false); return; }
+    let done=false; const fin=v=>{ if(done)return; done=true; resolve(v); };
+    const cb='__linkNow'+Date.now();
+    window[cb]=(resp)=>fin(!resp||!resp.ok?false:(resp.status==='closed'?'closed':(resp.done?'done':false)));
+    const hire=(HM_DATA&&HM_DATA.입사자&&HM_DATA.입사자.입사일)||document.getElementById('p_hire').value||_params.get('hire')||'';
+    const s=document.createElement('script');
+    s.src=SUBMIT_URL+'?action=checkLink&code='+encodeURIComponent(_linkCode)+'&k='+execKey()+'&hire='+encodeURIComponent(hire)+'&callback='+cb+'&_='+Date.now();
+    s.onerror=()=>fin(false); document.body.appendChild(s); setTimeout(()=>fin(false),9000);
+  });
+}
+async function submitToSheet(){
+  if(blockIfMissing()) return;
+  const btn=document.getElementById('submitBtn'); btn.disabled=true; const orig=btn.textContent; btn.textContent='Submitting...';
+  if(!document.getElementById('subNote'))btn.insertAdjacentHTML('afterend','<div id="subNote" style="margin-top:8px;font-size:12px;color:var(--ink-soft)">Submitting. This can take up to a minute when the server is busy, so <b>please do not press the button again</b>.</div>');
+  
+  const lc=(EXL.okAt&&Date.now()-EXL.okAt<600000)?false:await linkClosedNow();
+  if(lc){ lc==='done' ? renderAlreadyDone() : renderClosedExec(); return; }
+  const d=collect();
+  if(!SUBMIT_URL){
+    btn.disabled=false; btn.textContent=orig;
+    alert('The automatic submission address (SUBMIT_URL) is not set. Save the approval data as JSON and send it back to HR.'); saveJSON(); return;
+  }
+  try{
+    const rec=toFlatRecord(d);
+    await fetch(SUBMIT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({_kind:'exec_final',_code:_linkCode,record:rec})});
+    fireRefresh();
+    renderExecDone();
+  }catch(e){
+    btn.disabled=false; btn.textContent=orig;
+    alert('Submission seems to be blocked. Please save the approval data as JSON and send it back.'); saveJSON();
+  }
+}
+
+
+function renderExecDone(){
+  document.querySelector('.wrap').innerHTML = `<div class="topbar"><div class="brand"><div class="mk">HR</div>
+      <div><b>Round 2 Review and Executive Approval</b><span>Talent Development Team</span></div></div></div>
+    <div class="card" style="text-align:center;padding:52px 20px">
+      <div style="width:64px;height:64px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:30px">&#10003;</div>
+      <h2 style="margin:0 0 8px;font-size:22px">Approval submitted</h2>
+      <p style="color:var(--ink-soft);margin:0;font-size:15px">${ME_TOKEN?'Received by the Talent Development Team. Nothing else is needed from you.':'Nothing else is needed from you.'}</p>
+      ${ME_TOKEN?'<div id="mtExtra" class="mt"></div>':''}
+    </div>`;
+  window.scrollTo(0,0);
+  if(ME_TOKEN){ MT.redo=EXRD.need; MT.me=ME_TOKEN; MT.k='exec'; MT.code=_linkCode||''; MT.who=(HM_DATA&&HM_DATA.입사자&&HM_DATA.입사자.성명)||''; mtAfterDone(); }
+}
+
+function renderHmDone(who){
+  document.querySelector('.wrap').innerHTML = `<div class="topbar"><div class="brand"><div class="mk">HR</div>
+      <div><b>Round 2 Review by Hiring Manager</b><span>Talent Development Team</span></div></div></div>
+    <div class="card" style="text-align:center;padding:52px 20px">
+      <div style="width:64px;height:64px;border-radius:50%;background:var(--ok-soft);color:var(--ok);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:30px">&#10003;</div>
+      <h2 style="margin:0 0 8px;font-size:22px">Review submitted</h2>
+      <p style="color:var(--ink-soft);margin:0;font-size:15px">Your Round 2 review and approval request have been received by the Talent Development Team. Nothing else is needed from you.</p>
+      ${who?`<p style="margin:14px 0 0;font-size:14.5px;color:var(--ink)">Thank you for your thoughtful evaluation of ${esc(who)}.</p>`:''}
+      <div id="mtExtra" class="mt"></div>
+    </div>`;
+  window.scrollTo(0,0);
+  mtAfterDone();
+}
+
+
+function fireRefresh(){ try{ if(SUBMIT_URL) fetch(SUBMIT_URL,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({_kind:'refresh'})}).catch(()=>{}); }catch(e){} }
+async function sendExecHandoff(payload){
+  if(!SUBMIT_URL || !_linkCode) return false;
+  try{
+    await fetch(SUBMIT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},
+      body:JSON.stringify({_kind:'exec_stage1',_code:_linkCode,teamLead:payload,record:toFlatRecord(payload)})});
+    fireRefresh();
+    return true;
+  }catch(e){ return false; }
+}
+async function makeExecLink(){
+  const btn=document.getElementById('makeLinkBtn');
+  if(btn.disabled) return;
+  if(blockIfMissing()) return;   
+  const origLabel=btn.textContent;
+  btn.disabled=true; btn.classList.add('loading'); btn.textContent='Creating link...';
+  const lc2=(EXL.okAt&&Date.now()-EXL.okAt<600000)?false:await linkClosedNow();
+  if(lc2){ btn.classList.remove('loading'); lc2==='done' ? renderAlreadyDone() : renderClosedExec(); return; }
+  try{ await buildExecLink(); }
+  finally{
+    btn.classList.remove('loading');
+    if(btn.dataset.done){ btn.disabled=true; btn.textContent='Review submitted'; }   
+    else { btn.disabled=false; btn.textContent=origLabel; }
+  }
+}
+async function buildExecLink(){
+  const payload=collect();
+  const sentOk=await sendExecHandoff(payload);
+  if(ME_TOKEN){
+    
+    if(!sentOk){ alert('The submission did not go through. Please check your connection and try again.'); return; }
+    document.getElementById('makeLinkBtn').dataset.done='1';
+    MT.redo=EXRD.need; MT.me=ME_TOKEN; MT.k='cats'; MT.code=_linkCode||''; MT.who=document.getElementById('p_name').value.trim();
+    renderHmDone(MT.who);   
+    return;
+  }
+  const base=location.origin+location.pathname;
+  const link=base+'?stage=exec&code='+encodeURIComponent(_linkCode||'');
+  const out=document.getElementById('linkOut');
+  out.style.display='block';
+  out.innerHTML=`<div class="note" style="line-height:1.6">
+    <b>The approval link is ready.</b> Send it to the executive. They only need to review your evaluation and add their approval.
+    <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+      <input id="linkField" readonly value="${link.replace(/"/g,'&quot;')}" style="flex:1;min-width:240px;font-size:12px">
+      <button class="btn ghost sm" style="padding:8px 13px" onclick="copyLinkText(document.getElementById('linkField').value,document.getElementById('linkField'),this)">Copy link</button>
+    </div>
+  </div>
+  <div class="note" style="margin-top:10px;background:var(--accent-soft);color:var(--ink);border:1.5px solid var(--accent);border-left-width:6px;padding:16px 18px;font-size:15px;line-height:1.6"><div style="color:var(--accent);font-size:16.5px;font-weight:800;margin-bottom:6px">Next step</div>Please send the link above to the executive. Once they approve, nothing else is needed from you.</div>`;
+  out.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+function copyLinkText(text,inputEl,btn){
+  const flash=msg=>{ if(!btn)return; const o=btn.dataset.o||btn.textContent; btn.dataset.o=o; btn.textContent=msg; setTimeout(()=>{btn.textContent=o;},1800); };
+  const legacy=()=>{
+    try{
+      const ta=document.createElement('textarea'); ta.value=text; ta.setAttribute('readonly',''); ta.style.cssText='position:fixed;top:0;left:0;opacity:0';
+      document.body.appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0,text.length);
+      const r=document.execCommand('copy'); document.body.removeChild(ta);
+      if(r){ flash('Copied'); return; }
+    }catch(e){}
+    if(inputEl){ inputEl.focus(); inputEl.select(); }
+    flash('Press Ctrl+C to copy');
+  };
+  if(navigator.clipboard&&window.isSecureContext){ navigator.clipboard.writeText(text).then(()=>flash('Copied')).catch(legacy); } else legacy();
+}
+
+
+function hmSummaryHTML(d){
+  let n=0, html='';
+  const esc2=t=>(t||'').replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+  CATS.forEach(cat=>{
+    html+=`<div class="sum-band">${esc(cat.name)}<span class="w">${cat.weight} points</span></div>`;
+    cat.items.forEach(it=>{
+      n++;
+      const v=(d.팀장평가||{})[it.t]||{};
+      const sel=Number(v.선택)||0;
+      scores[it.key]=sel||undefined;      
+      const lab=(SCALE.find(x=>x.v===sel)||{}).l||'';
+      html+=`<div class="sum-item">
+        <div class="sum-top">
+          <div class="sum-name"><span class="sum-no">${n}</span>${esc(it.t)}<span class="bp">Weight ${it.bp}</span></div>
+          <div class="sum-score">
+            <div class="sum-chip"><small>Rating</small><b>${sel?sel+' pts':'-'}</b><em>${esc(lab)}</em></div>
+            <div class="sum-chip earn"><small>Earned / Weight</small><b>${v.취득!==undefined&&v.취득!==''?v.취득:'-'} / ${v.배점??it.bp}</b></div>
+          </div>
+        </div>
+        <div class="sum-desc">${esc(it.d)}</div>
+        <button class="crit-toggle" onclick="toggleCrit('${it.key}')">Rating guide &#9662;</button>
+        <div class="crit" id="crit_${it.key}">${critTable(it.key)}</div>
+      </div>`;
+    });
+  });
+  html+=d.팀장?.의견?`<div style="margin-top:16px"><div class="lb" style="font-size:13px;font-weight:700;color:var(--ink-soft);margin-bottom:5px">Manager comments</div><div style="font-size:14px;white-space:pre-wrap;background:var(--line-soft);border-radius:9px;padding:12px 14px;line-height:1.6">${esc2(d.팀장.의견)}</div></div>`:'';
+  return html;
+}
+
+function setLockTag(id, txt){ const el=document.getElementById(id); if(el) el.textContent=txt?(' '+txt):''; }
+function setField(id, v, lock){
+  const el=document.getElementById(id); if(!el) return;
+  el.value=v||''; el.disabled=!!lock;
+}
+function applyStage(){
+  const pill=document.getElementById('stagePill'), desc=document.getElementById('stageDesc');
+  const g=id=>document.getElementById(id);
+  document.body.classList.remove('exec-wait');
+  g('retryBtn').style.display='none';
+  if(STAGE==='hm'){
+    pill.textContent='Step 1 of 2: Hiring manager review';
+    desc.textContent = ME_TOKEN ? 'Rate each item below and submit. This opens the approval step in the executive\'s My Tasks.' : 'Rate each item below, then create the approval link to send to the executive.';
+    if(ME_TOKEN && !g('makeLinkBtn').dataset.done) g('makeLinkBtn').textContent='Submit review and request approval';
+    g('execCard').style.display='none';
+    g('makeLinkBtn').style.display=''; g('submitBtn').style.display='none';
+    g('gotoExecBtn').style.display='none';
+    
+    const tgt=_params.get('target'), hire=_params.get('hire'), dept=_params.get('dept'), cl=_params.get('cl');
+    setField('p_name',tgt,!!tgt);
+    setDept('p',dept,!!dept);
+    setField('p_hire',hire,!!hire);
+    const clEl=g('p_cl'); if(clEl){ clEl.value=cl||''; clEl.disabled=!!cl; if(cl) onCLChange(); }
+    
+    setField('hm_name',_params.get('hm'),false);
+    setDept('hm',_params.get('hmdept')||dept,false);
+    setField('hm_date','',false); setField('hm_sign','',false);
+    
+    ['ex_dept','ex_name','ex_date','ex_sign'].forEach(id=>{const el=g(id); if(el){el.value=''; el.disabled=true; el.placeholder='Completed by the executive';}});
+    g('blkP').classList.toggle('locked',true); g('blkEX').classList.add('locked'); g('blkHM').classList.remove('locked');
+    setLockTag('tagHM','(in progress)'); setLockTag('tagEX','(completed in step 2)');
+    g('scoreReveal').style.display='none';
+    if(!g('hm_date').value) g('hm_date').value=todayStr();   
+    showMood(); updateProgress();
+  }else{
+    pill.textContent='Step 2 of 2: Executive approval';
+    desc.textContent='Review the hiring manager\'s ratings, then add your score and comments under "3. Executive Approval" at the bottom, sign, and submit.';
+    g('execCard').style.display='';          
+    g('gotoExecBtn').style.display='';
+    g('scoreReveal').style.display='';
+    const d=HM_DATA||{};
+    setDept('p',d.입사자?.소속,true);setField('p_name',d.입사자?.성명,true);setField('p_hire',d.입사자?.입사일,true);
+    setField('p_cl',d.입사자?.직급,true);
+    setDept('hm',d.팀장?.소속,true);setField('hm_name',d.팀장?.성명,true);setField('hm_date',d.팀장?.평가일,true);setField('hm_sign',d.팀장?.서명,true);
+    ['ex_dept','ex_name','ex_date','ex_sign','ex_score','ex_comment'].forEach(id=>{const el=g(id);if(el){el.disabled=false;el.placeholder=(id==='ex_score'?'e.g., 90':'');}});
+    
+    const pre=d.담당임원예정||{};
+    if(!g('ex_dept').value) g('ex_dept').value=pre.소속||'';
+    if(!g('ex_name').value) g('ex_name').value=pre.성명||'';
+    if(!g('ex_date').value) g('ex_date').value=todayStr();
+    const exComment=g('ex_comment'); if(exComment) exComment.placeholder=`Your comments help us support ${d.입사자?.성명||'the new hire'}'s growth. Please be candid and constructive.`;
+    g('blkP').classList.add('locked'); g('blkHM').classList.add('locked'); g('blkEX').classList.remove('locked');
+    setLockTag('tagHM','(entered by the hiring manager, read-only)'); setLockTag('tagEX','(in progress)');
+    g('hmLead').textContent='This is the hiring manager\'s review. Please add your approval in the executive section below.';
+    g('evalArea').innerHTML=hmSummaryHTML(d);
+    g('subJob').textContent=d.직무역량점수??0;
+    g('subOrg').textContent=d.조직적응점수??0;
+    g('totalScore').textContent=d.총점??0;
+    const hc=document.getElementById('hm_comment'); if(hc&&hc.closest('label'))hc.closest('label').style.display='none';
+    g('makeLinkBtn').style.display='none'; g('submitBtn').style.display='';
+    showMood(); updateProgress();
+  }
+}
+
+function showExecLoadFailed(){
+  document.body.classList.add('exec-wait');
+  if(EXEC_NOT_READY){
+    document.getElementById('stagePill').textContent='The hiring manager has not submitted the review yet';
+    document.getElementById('stageDesc').textContent='You can approve once the hiring manager submits the review. Then press "Reload". If you believe it was already submitted and this message remains, contact the Talent Development Team.';
+  }else{
+    document.getElementById('stagePill').textContent='Could not load the hiring manager\'s review';
+    document.getElementById('stageDesc').textContent='Please try again in a moment. If the problem continues, contact the Talent Development Team.';
+  }
+  document.getElementById('retryBtn').style.display=''; document.getElementById('gotoExecBtn').style.display='none';
+}
+
+function startApp(){
+  buildDeptSelects();
+  if(STAGE==='exec' && !HM_DATA && EXEC_LOAD_FAILED){ showExecLoadFailed(); return; }
+  buildEval();   
+  applyStage();
+  APP_STARTED=true; showRedoNote(); applyPrevExec();   
+}
+function renderClosedExec(){
+  document.querySelector('.wrap').innerHTML = `<div class="topbar"><div class="brand"><div class="mk">HR</div>
+      <div><b>Round 2 Review and Executive Approval</b><span>Talent Development Team</span></div></div></div>
+    <div class="card" style="text-align:center;padding:50px 20px">
+      <h2 style="margin:0 0 8px">This link is closed</h2>
+      <p style="color:var(--ink-soft);margin:0">This approval link is no longer accepting responses. Please contact the Talent Development Team.</p>
+    </div>`;
+}
+
+const EXL={started:false,released:false,st:false,okAt:0,waiters:[]};
+
+const LINK_BLOCKING=false;
+function startExecLinkCheck(code){   
+  if(EXL.started)return; EXL.started=true;
+  const release=()=>{ if(EXL.released)return; EXL.released=true; EXL.waiters.splice(0).forEach(f=>f(EXL.st)); };
+  window.__linkStatusCb2=(resp)=>{
+    if(resp && resp.ok && resp.redo){ EXRD.need=true; loadPrevExec(); }   
+    const closed=!!(resp && resp.ok && resp.status==='closed');
+    const st=closed?'closed':((resp && resp.ok && resp.done)?'done':false);
+    if(st) EXL.st=st;
+    if(resp && resp.ok && !st) EXL.okAt=Date.now();   
+    if(EXL.released && st){ st==='done' ? renderAlreadyDone() : renderClosedExec(); return; }   
+    release();
+  };
+  const s=document.createElement('script');
+  const hire=(HM_DATA&&HM_DATA.입사자&&HM_DATA.입사자.입사일)||_params.get('hire')||'';
+  s.src=SUBMIT_URL+'?action=checkLink&code='+encodeURIComponent(code)+'&k='+execKey()+'&hire='+encodeURIComponent(hire)+'&callback=__linkStatusCb2&_='+Date.now();
+  s.onerror=release;
+  document.body.appendChild(s);
+  setTimeout(release, 20000);   
+}
+
+const EXRD={need:false,asked:false,data:null,applied:false};
+let APP_STARTED=false;
+function showRedoNote(){
+  if(!EXRD.need||document.getElementById('redoNote'))return;
+  const el=document.getElementById('stageDesc'); if(!el)return;
+  el.insertAdjacentHTML('afterend','<div id="redoNote" class="note" style="background:#fff7e6;border:1.5px solid #f3d28a;color:#7a4b00;font-size:13.5px;margin:12px 0 0;line-height:1.6"><b>Revision requested.</b> Your earlier answers are filled in. Change only what needs updating and submit again. The latest version is used, and the earlier one is kept on file.</div>');
+}
+function applyPrevExec(){
+  const d=EXRD.data; if(!d||!APP_STARTED||EXRD.applied)return; EXRD.applied=true;
+  const g=id=>document.getElementById(id);
+  if(STAGE==='hm'&&d.sel){
+    CATS.flatMap(c=>c.items).forEach(it=>{ const v=Number(d.sel[it.t]); if(v>=1&&v<=5)pick(it.key,v); });
+    const h=d.hm||{};
+    if(h.name)setField('hm_name',h.name,false);
+    if(h.dept)setDept('hm',h.dept,false);
+    if(h.date)setField('hm_date',h.date,false);
+    if(h.sign)setField('hm_sign',h.sign,false);
+    if(h.comment)setField('hm_comment',h.comment,false);
+  }
+  if(STAGE==='exec'&&d.ex){
+    const e=d.ex;
+    ['dept','name','date','sign','score','comment'].forEach(f=>{ if(e[f]!==undefined&&e[f]!==''&&g('ex_'+f))g('ex_'+f).value=e[f]; });
+    onExecScore();
+  }
+  showRedoNote(); updateProgress();
+}
+function loadPrevExec(){
+  if(EXRD.asked||!SUBMIT_URL||!_linkCode)return; EXRD.asked=true;
+  if(APP_STARTED)showRedoNote();
+  let tries=0;
+  const send=()=>{
+    tries++;
+    const cb='__prevExecCb'+tries; window[cb]=resp=>{ if(resp&&resp.ok&&resp.data){ EXRD.data=resp.data; applyPrevExec(); } };
+    const s=document.createElement('script');
+    s.src=SUBMIT_URL+'?action=getResponse&code='+encodeURIComponent(_linkCode)+'&k='+execKey()+'&callback='+cb+'&_='+Date.now();
+    s.onerror=()=>{ if(tries<2) setTimeout(send,1500); };
+    document.body.appendChild(s);
+  };
+  send();
+}
+function checkLinkStatusExec(code, cb){
+  startExecLinkCheck(code);
+  if(EXL.released) cb(EXL.st); else EXL.waiters.push(cb);
+}
+
+const MT={me:ME_TOKEN,k:'',code:'',who:'',tasks:null,sent:false};
+const MT_TITLE={
+  n1:t=>'Round 1: Hiring Quality Survey',
+  h1:t=>'Round 1: Hiring Quality Review for '+t.who,
+  n2:t=>'Round 2: Self-assessment',
+  h2:t=>'Round 2: Self-assessment Feedback for '+t.who,
+  cats:t=>'Round 2: Manager Review and Approval Request for '+t.who,
+  exec:t=>'Round 2: Executive Approval for '+t.who
+};
+const MT_WAIT={
+  h2:t=>'Opens when '+t.who+' submits the self-assessment',
+  exec:t=>'Opens after the hiring manager completes the review, who will let you know'
+};
+const mtWD=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+function mtEsc(s){return (s==null?'':String(s)).replace(/[<>&"]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;'}[c]));}
+function mtToday(){const d=new Date();return d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);}
+function mtDstr(iso){const d=new Date(iso+'T00:00:00');return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getDate()+' ('+mtWD[d.getDay()]+')';}
+function mtDleft(due){return Math.round((new Date(due+'T00:00:00')-new Date(mtToday()+'T00:00:00'))/86400000);}
+function mtHasDue(t){return /^\d{4}-\d{2}-\d{2}$/.test(t.due||'');}
+
+function mtUrgDays(t){return t.k==='n2'?1:3;}
+function mtUrgent(t){return t.st!=='done'&&mtHasDue(t)&&mtDleft(t.due)<=mtUrgDays(t);}
+function mtDueTxt(t){if(!mtHasDue(t))return '';const d=mtDleft(t.due);return d<0?'Past due ('+mtDstr(t.due)+')':d===0?'Due today ('+mtDstr(t.due)+')':'Due '+mtDstr(t.due)+' ('+d+(d===1?' day':' days')+' left)';}
+function mtHubUrl(){return location.origin+location.pathname.replace(/[^\/]*$/,'')+'my_tasks.html?me='+encodeURIComponent(MT.me);}
+function mtToast(m){
+  let t=document.getElementById('mtoast');
+  if(!t){t=document.createElement('div');t.id='mtoast';t.className='mtoast';document.body.appendChild(t);}
+  t.textContent=m;t.classList.add('show');clearTimeout(mtToast._t);mtToast._t=setTimeout(()=>t.classList.remove('show'),3600);
+}
+function mtFetch(cb,me){
+  
+  let finished=false,attempt=0;const fin=r=>{if(finished)return;finished=true;cb(r);};
+  const who=me||MT.me;
+  const retryOrFail=()=>{if(finished)return;if(attempt<2)send();else fin(null);};
+  const send=()=>{
+    attempt++;
+    const name='__mtd'+Date.now()+Math.floor(Math.random()*1000);
+    window[name]=r=>fin(r);
+    const s=document.createElement('script');
+    s.src=SUBMIT_URL+'?action=myTasks&me='+encodeURIComponent(who)+'&callback='+name+'&_='+Date.now();
+    s.onerror=()=>{setTimeout(retryOrFail,1500);};document.body.appendChild(s);
+    setTimeout(retryOrFail,attempt===1?35000:40000);
+  };
+  send();
+}
+
+const MTPRE={started:false,done:false,r:null,cbs:[]};
+function mtPrefetch(me){
+  if(!me||!SUBMIT_URL||MTPRE.started)return; MTPRE.started=true;
+  mtFetch(r=>{MTPRE.done=true;MTPRE.r=(r&&r.ok&&r.data)?r:null;MTPRE.cbs.splice(0).forEach(f=>f(MTPRE.r));},me);
+}
+function mtCard(t,num,primary){
+  const no='<div class="no">'+num+'</div>',title=mtEsc((MT_TITLE[t.k]||(()=>t.k))(t));
+  const hot=mtUrgent(t),due=mtDueTxt(t),chip=due?'<span class="chip '+(hot?'hot':'due')+'">'+mtEsc(due)+'</span>':'';
+  if(t.st==='done')return '<div class="t dn">'+no+'<div class="body"><div class="ti">'+title+'</div><div class="meta"><span class="chip dn">Done</span>Responses cannot be viewed after submission</div></div></div>';
+  if(t.st==='wait')return '<div class="t wait">'+no+'<div class="body"><div class="ti">'+title+'</div><div class="meta"><span class="chip wt">Waiting</span>'+chip+'<br>'+mtEsc((MT_WAIT[t.k]||(()=>''))(t))+'</div></div><div class="act"><button class="btn primary sm" disabled>Not open yet</button></div></div>';
+  return '<div class="t">'+no+'<div class="body"><div class="ti">'+title+'</div><div class="meta">'+(t.redo?'<span class="chip due">Revision requested</span>':'<span class="chip go">To do</span>')+chip+'</div></div>'+
+    '<div class="act">'+(t.url?'<a class="btn link sm '+(hot?'red':primary?'primary':'ghost')+'" href="'+mtEsc(t.url)+'">Start</a>':'<button class="btn primary sm" disabled>Link not ready</button>')+'</div></div>';
+}
+function mtGroup(label,list,sub,first){
+  if(!list.length)return '';
+  return '<div class="grp"><h3>'+label+' ('+list.length+')</h3>'+(sub?'<p class="gsub">'+sub+'</p>':'')+list.map((t,j)=>mtCard(t,j+1,!!first&&j===0)).join('')+'</div>';
+}
+function mtGroups(list){
+  const todo=list.filter(t=>t.st==='todo').map((t,i)=>[t,i]).sort((a,b)=>(mtUrgent(b[0])-mtUrgent(a[0]))||(a[1]-b[1])).map(x=>x[0]);
+  return mtGroup('To do',todo,'',true)+mtGroup('Coming up',list.filter(t=>t.st==='wait'),'These open automatically when the earlier step is finished. Keep this page open and it refreshes every 30 seconds.',false);
+}
+function mtAlert(list){
+  const open=list.filter(t=>t.st!=='done'&&mtHasDue(t));
+  const today=open.filter(t=>mtDleft(t.due)<=0).length,soon=open.filter(t=>mtDleft(t.due)>0&&mtDleft(t.due)<=mtUrgDays(t)).length;
+  if(!today&&!soon)return '';
+  const parts=[];if(today)parts.push(today+' due today');if(soon)parts.push(soon+' due soon');
+  return '<div class="alert"><b>'+parts.join(', ')+'</b><br>Links close after the due date. Start with the items marked in red.</div>';
+}
+
+
+const MT_FALLBACK='If the button above does not work, use this direct link.';
+function mtOpenLine(N){return 'Hi '+N.to.split(' ')[0]+', '+(N.redo?'I have updated my part of the onboarding check and resubmitted it. Please use the link below to ':'I have finished my part of the onboarding check, and the next step is now with you. Please use the link below to ')+N.act+'.';}
+function mtNotifyOf(task){
+  if(!task||!task.next)return null;
+  const who=task.who||MT.who,n=task.next,re=!!MT.redo;   
+  if(task.k==='n2'&&re)return {redo:true,head:'an updated self-assessment is ready for you',to:n.to,act:'review the changes and give your feedback',what:who+' revised the Round 2 self-assessment and resubmitted it.',hub:n.hub,direct:n.direct,subj:'(Onboarding Check) Updated: '+who+' resubmitted the self-assessment'};
+  if(task.k==='cats'&&re)return {redo:true,head:'an updated manager review is ready for you',to:n.to,act:'review the changes and complete your approval',what:'The hiring manager revised the Round 2 review of '+who+' and resubmitted it.',hub:n.hub,direct:n.direct,subj:'(Onboarding Check) Updated: manager review of '+who+' resubmitted'};
+  if(task.k==='n2')return {head:'your next step is ready in My Tasks',to:n.to,act:'write your feedback',what:who+' has submitted the Round 2 self-assessment, so your feedback step is now open.',hub:n.hub,direct:n.direct,subj:'(Onboarding Check) Action needed: feedback on '+who+'\'s self-assessment'};
+  if(task.k==='cats')return {head:'your next step is ready in My Tasks',to:n.to,act:'complete your approval',what:'The hiring manager has completed the Round 2 review of '+who+', so your approval step is now open.',hub:n.hub,direct:n.direct,subj:'(Onboarding Check) Action needed: approval for '+who};
+  return null;
+}
+
+function mtMailHTML(N){
+  const F='font-family:Calibri,Arial,sans-serif;',E=mtEsc;
+  return '<div style="'+F+'font-size:10.5pt;line-height:1.7;color:#1a2230">'+
+    '<p style="'+F+'margin:0 0 16px;font-size:11pt;color:#1a2230">'+E(mtOpenLine(N))+'</p>'+
+    '<table role="presentation" width="640" cellpadding="0" cellspacing="0" style="'+F+'border-collapse:collapse;width:640px;max-width:100%;border:1px solid #e3e7ee;background:#ffffff">'+
+    '<tr><td style="'+F+'padding:22px 26px 0"><table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse"><tr>'+
+      '<td width="30" height="30" align="center" bgcolor="#1F6FEB" style="'+F+'background:#1F6FEB;color:#ffffff;font-weight:bold;font-size:9.5pt;width:30px;height:30px">HR</td>'+
+      '<td style="padding-left:10px;'+F+'"><div style="'+F+'font-size:11pt;font-weight:bold;color:#1a2230;line-height:1.3">New Hire Onboarding Check</div><div style="'+F+'font-size:8.5pt;color:#4a556a;line-height:1.3">Talent Development Team</div></td>'+
+    '</tr></table></td></tr>'+
+    '<tr><td style="'+F+'padding:20px 26px 4px"><div style="'+F+'font-size:17pt;font-weight:bold;color:#1a2230;line-height:1.4">'+E(N.to)+', '+E(N.head)+'</div></td></tr>'+
+    '<tr><td style="'+F+'padding:10px 26px 4px"><table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse"><tr>'+
+      '<td width="6" bgcolor="#1F6FEB" style="'+F+'background:#1F6FEB;width:6px;font-size:1px">&nbsp;</td>'+
+      '<td bgcolor="#EAF1FE" style="'+F+'background:#EAF1FE;padding:16px 18px">'+
+        '<div style="'+F+'font-size:10.5pt;color:#4a556a;margin:0 0 12px">'+E(N.what)+'</div>'+
+        '<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse"><tr><td bgcolor="#1F6FEB" style="'+F+'background:#1F6FEB;padding:10px 22px"><a href="'+E(N.hub)+'" style="'+F+'color:#ffffff;font-weight:bold;text-decoration:none;font-size:10.5pt">Open My Tasks</a></td></tr></table>'+
+      '</td></tr></table></td></tr>'+
+    '<tr><td style="'+F+'padding:16px 26px 22px;font-size:9.5pt;color:#4a556a">'+E(MT_FALLBACK)+' <a href="'+E(N.direct)+'" style="color:#1F6FEB;font-weight:bold;text-decoration:underline">Open direct link</a></td></tr>'+
+    '</table></div>';
+}
+function mtMailPlain(N){return mtOpenLine(N)+'\n\n'+N.to+', '+N.head+'\n'+N.what+'\n\nOpen My Tasks: '+N.hub+'\n\n'+MT_FALLBACK+'\nDirect link: '+N.direct;}
+function mtB64(s){const bytes=new TextEncoder().encode(s);let bin='';for(let i=0;i<bytes.length;i+=0x8000)bin+=String.fromCharCode.apply(null,bytes.subarray(i,i+0x8000));return btoa(bin);}
+function mtMakeEml(N){
+  const wrap=s=>s.replace(/(.{76})/g,'$1\r\n');
+  return 'X-Unsent: 1\r\nSubject: =?UTF-8?B?'+mtB64(N.subj)+'?=\r\nMIME-Version: 1.0\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n'+wrap(mtB64(mtMailHTML(N)))+'\r\n';
+}
+function mtNotify(){return MT._notify||null;}
+function mtDownloadEml(){
+  const N=mtNotify();if(!N)return;
+  const blob=new Blob([mtMakeEml(N)],{type:'message/rfc822'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='Onboarding_Check_Notification.eml';document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);
+  mtToast('Open the downloaded file to get an Outlook draft. Add the recipient and send.');
+}
+function mtCopyPlain(text,msg){
+  const ok=()=>mtToast(msg);
+  const legacy=()=>{try{const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';document.body.appendChild(ta);ta.focus();ta.select();const r=document.execCommand('copy');document.body.removeChild(ta);if(r){ok();return;}}catch(e){}mtToast('Copy is blocked in this browser. Please select the preview text and copy it manually.');};
+  if(navigator.clipboard&&window.isSecureContext){navigator.clipboard.writeText(text).then(ok).catch(legacy);}else legacy();
+}
+function mtCopyRich(){
+  const N=mtNotify();if(!N)return;
+  const html=mtMailHTML(N),plain=mtMailPlain(N);
+  if(navigator.clipboard&&window.ClipboardItem&&window.isSecureContext){
+    navigator.clipboard.write([new ClipboardItem({'text/html':new Blob([html],{type:'text/html'}),'text/plain':new Blob([plain],{type:'text/plain'})})]).then(()=>mtToast('Copied. Paste it into a new email.')).catch(()=>mtCopyPlain(plain,'Copied. Paste it into a new email.'));
+  }else mtCopyPlain(plain,'Copied. Paste it into a new email.');
+}
+function mtNotifyBox(N){
+  return '<div class="box"><h3>Let '+mtEsc(N.to)+' know by email</h3>'+
+    '<p class="lead">'+mtEsc(N.to)+(N.redo?' <b>already has this step open in My Tasks.</b> Send a short note that you resubmitted.<br><span class="mtone">The email includes a direct link in case My Tasks does not open.</span></p>':' now has the next step <b>open in My Tasks.</b> Send a short email so they know it is ready.<br><span class="mtone">The email includes a direct link in case My Tasks does not open.</span></p>')+
+    '<div class="act"><button class="btn primary" onclick="mtDownloadEml()">Open draft in Outlook</button><button class="btn ghost" onclick="mtCopyRich()">Copy email text</button></div>'+
+    '<ul class="mtnote"><li>Click "Open draft in Outlook", then open the downloaded file. Outlook opens with the email below already written.<br>(In Chrome, use the download bar. In Edge, open the file from the downloads panel.)</li><li>Or click "Copy email text" and paste it into a new email.</li></ul>'+
+    '<div class="sub2"><b>Email preview</b><div class="pv"><div class="pvsub"><b>Subject</b> '+mtEsc(N.subj)+'</div><div class="pvbody">'+mtMailHTML(N)+'</div></div></div></div>';
+}
+
+
+
+function mtNxFromUrl(){
+  try{const q=new URLSearchParams(location.search),to=q.get('nxto'),hub=q.get('nxhub'),d=q.get('nxd');return(to&&(hub||d))?{to:to,hub:hub||'',direct:d||''}:null;}catch(e){return null;}
+}
+function mtAfterDone(){
+  const box=document.getElementById('mtExtra');
+  if(!box||!MT.me)return;
+  const hub=mtHubUrl();
+  let shown=false;
+  const NX=mtNxFromUrl(),earlyN=NX?mtNotifyOf({k:MT.k,who:MT.who,next:NX}):null;   
+  MT._notify=earlyN;
+  const early=()=>earlyN?mtNotifyBox(earlyN):'';
+  box.innerHTML=early()+'<div class="box"><p class="lead" style="margin:0">Checking your next steps... This can take up to a minute when the server is busy.</p><p class="foot" style="margin:8px 0 0">You can also check on the <a href="'+mtEsc(hub)+'">My Tasks</a> page.</p></div>';
+  const fail=()=>{box.innerHTML=early()+'<div class="box"><p class="lead" style="margin:0 0 12px">Could not load your next steps. The server may be busy.</p><div class="mini-actions"><button class="btn ghost sm" onclick="mtAfterDone()">Reload</button><a class="btn primary sm link" href="'+mtEsc(hub)+'">Check in My Tasks</a></div></div>';};
+  const prep=(r)=>{
+    const tasks=r.data.tasks;
+    let mine=null;
+    tasks.forEach(t=>{if(t.k===MT.k&&(!MT.code||t.code===MT.code)){t.st='done';mine=t;}});   
+    return {tasks:tasks,mine:mine,sig:tasks.map(t=>t.k+'|'+t.code+'|'+t.st).join(',')};
+  };
+  const show=(P)=>{
+    const tasks=P.tasks;
+    MT.tasks=tasks;MT._sig=P.sig;shown=true;
+    const N=(mtNotifyOf(P.mine)||earlyN);MT._notify=N;
+    const rest=tasks.filter(t=>t.st!=='done'),n=tasks.length,dn=n-rest.length;
+    let h=N?mtNotifyBox(N):'';
+    if(rest.length){
+      h+='<div class="box"><h3>'+rest.length+(rest.length===1?' step':' steps')+' left</h3><p class="lead">Continue with the buttons below.</p>'+mtAlert(rest)+
+        '<div class="pg"><span>'+dn+' of '+n+' steps done</span><div class="bar"><i style="width:'+Math.round(dn/n*100)+'%"></i></div></div>'+
+        mtGroups(rest)+'<p class="foot">You can see all of your steps any time on the <a href="'+mtEsc(hub)+'">My Tasks</a> page.</p></div>';
+    }else{
+      h+='<div class="box ok"><h3>All steps complete</h3><p class="lead" style="margin-bottom:0">Nothing else is needed from you. Thank you!</p></div>';
+    }
+    box.innerHTML=h;
+  };
+  
+  const fresh=()=>mtFetch(r=>{
+    if(r&&r.ok&&r.data){const P=prep(r);if(!shown||P.sig!==MT._sig)show(P);}
+    else if(!shown)fail();
+  });
+  if(MTPRE.done&&MTPRE.r){show(prep(MTPRE.r));fresh();}
+  else if(MTPRE.started&&!MTPRE.done){MTPRE.cbs.push(r=>{if(r)show(prep(r));fresh();});}
+  else fresh();
+}
+
+
+function loadExecRef(code,done){
+  
+  let finished=false,attempt=0; const finish=()=>{ if(finished)return; finished=true; done(); };
+  const handle=(resp)=>{
+    if(finished)return;
+    if(resp && resp.ok && resp.data && resp.data.status==='done'){ ALREADY_DONE=true; }
+    else if(resp && resp.ok && resp.data && resp.data.teamLead){ HM_DATA=resp.data.teamLead; }
+    else{ EXEC_LOAD_FAILED=true; if(resp && resp.error==='not_found') EXEC_NOT_READY=true; } 
+    finish();
+  };
+  const retryOrFail=()=>{ if(finished)return; if(attempt<2) send(); else { if(!HM_DATA) EXEC_LOAD_FAILED=true; finish(); } };
+  const send=()=>{
+    attempt++;
+    const cb='__execRefCb'+attempt;
+    window[cb]=handle;
+    const s=document.createElement('script');
+    s.src=SUBMIT_URL+'?action=getPending&code='+encodeURIComponent(code)+'&callback='+cb+'&_='+Date.now();
+    s.onerror=()=>{ setTimeout(retryOrFail,1500); };
+    document.body.appendChild(s);
+    setTimeout(retryOrFail, attempt===1?35000:40000);
+  };
+  send();
+}
+function renderAlreadyDone(){
+  document.querySelector('.wrap').innerHTML = `<div class="topbar"><div class="brand"><div class="mk">HR</div>
+      <div><b>Round 2 Review and Executive Approval</b><span>Talent Development Team</span></div></div></div>
+    <div class="card" style="text-align:center;padding:50px 20px">
+      <h2 style="margin:0 0 8px">${STAGE==='exec'?'This approval was already completed':'Already submitted'}</h2>
+      <p style="color:var(--ink-soft);margin:0">For privacy, submitted responses cannot be viewed again. To make a change, please contact the Talent Development Team.</p>
+      ${ME_TOKEN?'<div style="margin-top:16px"><a class="btn primary" style="text-decoration:none" href="'+mtEsc(mtHubUrl())+'">Back to My Tasks</a></div>':''}
+    </div>`;
+}
+function bootAfterExecRef(){
+  if(ALREADY_DONE){ renderAlreadyDone(); return; }
+  if(_linkCode && SUBMIT_URL){
+    if(!LINK_BLOCKING){
+      startExecLinkCheck(_linkCode);
+      EXL.released=true;   
+      if(EXL.st){ EXL.st==='done' ? renderAlreadyDone() : renderClosedExec(); return; }
+      startApp(); return;
+    }
+    checkLinkStatusExec(_linkCode, st=>{ st==='done' ? renderAlreadyDone() : st ? renderClosedExec() : startApp(); });
+  }else{
+    startApp();
+  }
+}
+if(STAGE==='exec' && !HM_DATA && _linkCode && SUBMIT_URL){
+  try{ document.getElementById('stagePill').textContent='Loading...'; document.getElementById('stageDesc').textContent='Loading the hiring manager\'s review. This can take up to a minute when the server is busy. Please keep this window open.'; }catch(e){}
+  startExecLinkCheck(_linkCode);   
+  loadExecRef(_linkCode, bootAfterExecRef);
+}else{
+  bootAfterExecRef();
+}
+if(ME_TOKEN) setTimeout(()=>mtPrefetch(ME_TOKEN),20000);   
+</script>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>New Hire Onboarding Check: Process Guide</title>
+<style>
+  :root{
+    --ink:#1a2230;--soft:#4a556a;--faint:#8791a3;--line:#e3e7ee;--line2:#eef1f6;--bg:#f4f6fa;--card:#fff;
+    --navy:#16365c;--blue:#1f6feb;--blue-soft:#eaf1fe;--blue-line:#cddffb;
+    --green:#0f7a4d;--green-soft:#e7f4ee;--green-line:#cfe6da;
+    --purple:#6d3fd6;--purple-soft:#f1ecfc;--purple-line:#dccff5;
+    --warn:#b4530a;--warn-soft:#fdf1e4;--warn-line:#f0d6b8;
+  }
+  *{box-sizing:border-box}html,body{margin:0}
+  body{background:var(--bg);color:var(--ink);font-family:'Segoe UI',-apple-system,system-ui,Arial,sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  h1,h2,h3,h4,p,ul,ol{margin:0}
+  ul,ol{padding:0;list-style:none}
+
+  /* ---------- page shell: cards on screen, A4 landscape sheets in print ---------- */
+  .page{max-width:1120px;margin:20px auto;background:#fff;border-radius:14px;box-shadow:0 1px 2px rgba(20,30,50,.05),0 8px 24px rgba(20,30,50,.07);padding:30px 40px 22px;display:flex;flex-direction:column;gap:20px}
+  .top{display:flex;align-items:center;justify-content:space-between;gap:16px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .mk{width:36px;height:36px;border-radius:9px;background:linear-gradient(135deg,var(--blue),#0b3d91);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+  .brand b{display:block;font-size:17px;line-height:1.2}.brand span{font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);font-weight:700}
+  .pg{font-size:12px;font-weight:700;letter-spacing:.1em;color:var(--faint)}.pg b{color:var(--ink)}
+  .title h2{font-size:28px;letter-spacing:-.02em;line-height:1.2}
+  .title p{font-size:15.5px;color:var(--soft);margin-top:6px;max-width:760px}
+  .foot{margin-top:auto;padding-top:10px;border-top:1px solid var(--line2);font-size:12px;color:var(--faint)}
+  .label{font-size:12px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--faint);margin-bottom:10px}
+
+  /* role colors: new hire = green, hiring manager = blue, executive = purple */
+  .nh{--rc:var(--green);--rs:var(--green-soft);--rl:var(--green-line)}
+  .hm{--rc:var(--blue);--rs:var(--blue-soft);--rl:var(--blue-line)}
+  .ex{--rc:var(--purple);--rs:var(--purple-soft);--rl:var(--purple-line)}
+  .rolechip{display:inline-block;white-space:nowrap;font-size:12px;font-weight:800;color:var(--rc);background:var(--rs);border:1px solid var(--rl);border-radius:99px;padding:1px 10px}
+
+  /* ---------- page 1: timeline and rounds ---------- */
+  .tl{display:grid;grid-template-columns:repeat(3,1fr);position:relative}
+  .tl:before{content:"";position:absolute;left:16.6%;right:16.6%;top:17px;height:3px;background:var(--line);border-radius:3px}
+  .tp{position:relative;text-align:center;padding:0 8px}
+  .tp i{display:flex;width:max-content;min-width:64px;height:36px;padding:0 14px;border-radius:99px;margin:0 auto 8px;align-items:center;justify-content:center;font-style:normal;font-weight:800;font-size:13px;color:#fff;background:var(--faint);box-shadow:0 0 0 6px #fff}
+  .tp.rd i{background:var(--navy)}
+  .tp b{display:block;font-size:17px}.tp span{font-size:13px;color:var(--soft)}
+  .rounds{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .rc{border:1px solid var(--line);border-top:5px solid var(--navy);border-radius:14px;padding:16px 20px 10px}
+  .rc .tag{font-size:12px;font-weight:800;letter-spacing:.05em;color:var(--navy);text-transform:uppercase}
+  .rc h3{font-size:21px;margin:3px 0 2px;letter-spacing:-.01em}
+  .rc .q{font-size:14px;color:var(--soft);margin-bottom:8px}
+  .row{display:flex;align-items:baseline;gap:12px;padding:8px 0;border-top:1px solid var(--line2);font-size:14.5px}
+  .row .rolechip{flex:0 0 118px;text-align:center}
+  .row .t{flex:1}.row em{font-style:normal;color:var(--faint);font-size:12.5px;white-space:nowrap}
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .step{display:flex;gap:12px}
+  .step .n{flex:none;width:34px;height:34px;border-radius:50%;background:var(--blue);color:#fff;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .step b{display:block;font-size:16px}.step span{font-size:14px;color:var(--soft)}
+
+  /* ---------- page 2: who does what ---------- */
+  .r1box{display:grid;grid-template-columns:auto 1fr 1fr;gap:12px 16px;align-items:center;border:1px solid var(--line);border-radius:14px;padding:12px 18px}
+  .r1box .rt{font-size:12px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--navy)}
+  .r1box .lane{display:flex;align-items:center;gap:10px;font-size:14.5px}
+  .flow{display:grid;grid-template-columns:1fr 70px 1.15fr 70px 1fr;align-items:stretch}
+  .col{border:1px solid var(--rl);border-radius:14px;overflow:hidden;background:#fff;display:flex;flex-direction:column}
+  .col .ch{padding:10px 16px;background:var(--rs);border-bottom:1px solid var(--rl);display:flex;align-items:center;gap:10px}
+  .col .cn{width:28px;height:28px;border-radius:50%;background:var(--rc);color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;flex:none}
+  .col .ch b{font-size:17px;color:var(--rc)}
+  .col .cb{padding:12px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .task{border:1px solid var(--rl);border-radius:11px;padding:10px 12px;background:linear-gradient(180deg,var(--rs),#fff 75%)}
+  .task h4{font-size:14.5px;line-height:1.35;margin-bottom:6px}
+  .task ol{counter-reset:s}
+  .task li{counter-increment:s;position:relative;padding:0 0 5px 26px;font-size:13.5px;line-height:1.4}
+  .task li:before{content:counter(s);position:absolute;left:0;top:0;width:19px;height:19px;border-radius:50%;background:var(--rc);color:#fff;font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center}
+  .task li.done{font-weight:700;color:var(--green)}
+  .task li.done:before{content:"";background:var(--green)}
+  .task li.done:after{content:"";position:absolute;left:6px;top:4px;width:6px;height:9px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+  .note{margin-top:8px;font-size:12.5px;font-weight:700;color:var(--warn);background:var(--warn-soft);border:1px solid var(--warn-line);border-radius:8px;padding:4px 9px}
+  .hand{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--warn);text-align:center;padding:0 4px}
+  .hand .env{width:40px;height:40px;border-radius:50%;border:1.5px solid var(--warn-line);background:var(--warn-soft);display:flex;align-items:center;justify-content:center}
+  .hand .env svg{width:18px;height:18px}
+  .hand b{font-size:12.5px}.hand small{font-size:11px;color:var(--faint);line-height:1.3}
+  .hand .ln{width:40px;border-top:2px dashed var(--warn-line)}
+  .how{display:flex;align-items:center;gap:20px;background:#f7f8fb;border:1px solid var(--line2);border-radius:14px;padding:12px 20px;flex-wrap:wrap}
+  .how h4{font-size:14.5px;flex:0 0 auto}.how h4 small{display:block;font-weight:500;font-size:12px;color:var(--faint)}
+  .how ol{display:flex;align-items:center;gap:14px;flex:1;flex-wrap:wrap}
+  .how li{display:flex;align-items:center;gap:9px;font-size:13.5px;flex:1 1 200px}
+  .how li .n{flex:none;width:22px;height:22px;border-radius:50%;background:var(--ink);color:#fff;font-weight:800;font-size:11.5px;display:flex;align-items:center;justify-content:center}
+  .btn{display:inline-block;border-radius:6px;padding:2px 9px;font-size:12px;font-weight:800;background:var(--blue);color:#fff;white-space:nowrap}
+  .btn.gh{background:#fff;color:var(--blue);border:1px solid var(--blue-line)}
+
+  /* ---------- page 3: My Tasks screen and tips ---------- */
+  .p3{display:grid;grid-template-columns:1.1fr 1fr;gap:34px;align-items:start}
+  .mock{background:#f6f7fa;border:1px solid var(--line);border-radius:16px;padding:14px}
+  .mcard{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px}
+  .mb{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+  .mb .mk{width:26px;height:26px;border-radius:7px;font-size:11px}
+  .mb b{font-size:13px;display:block;line-height:1.2}.mb span{font-size:11px;color:var(--soft)}
+  .mh{font-size:19px;font-weight:800;line-height:1.25}
+  .mp{font-size:13px;color:var(--soft);margin-top:2px}
+  .mpg{display:flex;align-items:center;gap:9px;margin:10px 0 4px;font-size:12px;font-weight:700;color:var(--soft)}
+  .bar{flex:1;height:7px;border-radius:99px;border:1px solid var(--line);overflow:hidden}.bar i{display:block;height:100%;width:33%;background:var(--blue)}
+  .mg h5{margin:10px 0 0;font-size:13px;color:var(--soft)}
+  .mt{display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:11px;padding:9px 12px;margin-top:6px}
+  .mt .no{flex:none;width:23px;height:23px;border-radius:7px;background:var(--blue);color:#fff;font-weight:800;font-size:12px;display:flex;align-items:center;justify-content:center}
+  .mt.wait .no{background:#9aa5b8}.mt.dn .no{background:var(--green)}
+  .mt .bd{flex:1;min-width:0}.mt .ti{font-size:13.3px;font-weight:800;line-height:1.35}.mt .me{font-size:12px;color:var(--soft);margin-top:3px}
+  .chip{display:inline-block;font-size:11.8px;font-weight:800;border-radius:99px;padding:1px 9px;margin-right:5px}
+  .chip.go{background:var(--green-soft);color:var(--green)}.chip.wt{background:#eef0f4;color:#5b6678}.chip.due{background:var(--warn-soft);color:var(--warn)}
+  .mbtn{flex:none;border-radius:8px;padding:8px 14px;font-size:12.5px;font-weight:800;background:var(--blue);color:#fff}.mbtn.off{background:#cfd6e4;color:#fff}
+  .tips{display:flex;flex-direction:column}
+  .tip{display:flex;gap:14px;padding:13px 2px;border-top:1px solid var(--line)}
+  .tip:last-child{border-bottom:1px solid var(--line)}
+  .tip .ic{flex:none;width:36px;height:36px;border-radius:50%;border:1.5px solid var(--blue-line);color:var(--blue);display:flex;align-items:center;justify-content:center}
+  .tip.warn .ic{border-color:var(--warn-line);color:var(--warn)}
+  .tip .ic svg{width:17px;height:17px}
+  .tip h4{font-size:15px;margin-bottom:2px}.tip p{font-size:13.5px;color:var(--soft);line-height:1.5}.tip p b{color:var(--ink)}
+
+  /* ---------- small screens: stack everything ---------- */
+  @media(max-width:860px){
+    .page{margin:0 0 14px;border-radius:0;padding:22px 16px 18px}
+    .title h2{font-size:23px}.title p{font-size:14.5px}
+    .tp b{font-size:14px}.tp span{font-size:11.5px}.tp i{min-width:0;height:32px;padding:0 10px;font-size:12px}.tl:before{top:15px}
+    .rounds,.steps,.p3{grid-template-columns:1fr}.p3{gap:20px}
+    .row{flex-wrap:wrap}.row .rolechip{flex:0 0 auto}.row .t{flex:1 1 60%}.row em{flex:0 0 100%;padding-left:0}
+    .r1box{grid-template-columns:1fr}.r1box .lane{flex-wrap:wrap}
+    .flow{grid-template-columns:1fr}
+    .hand{flex-direction:row;padding:8px 0;gap:10px}.hand .ln{width:0;border-top:0;border-left:2px dashed var(--warn-line);height:22px}
+    .hand small{display:none}
+    .how{flex-direction:column;align-items:flex-start}
+    .mh{font-size:17px}
+  }
+
+  /* ---------- print: one page per sheet, A4 landscape ---------- */
+  @page{size:297mm 210mm;margin:0}
+  @media print{
+    body{background:#fff}
+    .page{max-width:none;margin:0;width:297mm;height:209mm;border-radius:0;box-shadow:none;padding:10mm 14mm 7mm;gap:13px;overflow:hidden;break-after:page;page-break-after:always}
+    .page:last-child{break-after:auto;page-break-after:auto}
+    .page{gap:10px}
+    .title h2{font-size:25px}.title p{font-size:14px;margin-top:3px}
+    .label{margin-bottom:6px}
+    .tp i{height:32px;margin-bottom:6px;box-shadow:0 0 0 5px #fff}.tl:before{top:15px}.tp b{font-size:15.5px}
+    .rc{padding:11px 18px 4px}.rc h3{font-size:19px}.rc .q{margin-bottom:5px;font-size:13.5px}.row{padding:6px 0;font-size:14px}
+    .step b{font-size:15px}.step span{font-size:13.5px}
+    .r1box{padding:9px 16px}
+    .col .ch{padding:7px 14px}.col .cb{padding:9px 12px;gap:8px}.task{padding:8px 11px}.task h4{font-size:14px;margin-bottom:4px}.task li{font-size:13px;padding-bottom:4px}
+    .how{padding:8px 16px;gap:14px}
+    .tip{padding:9px 2px}.tip p{font-size:13px}.tip h4{font-size:14.5px}
+    .mcard{padding:12px 16px}.mt{padding:7px 10px}.mh{font-size:17px}
+    .foot{padding-top:6px}
+    .page.p1{gap:20px}.page.p1 .rc{padding:14px 20px 8px}.page.p1 .row{padding:8px 0}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ PAGE 1: the big picture ============ -->
+<section class="page p1">
+  <div class="top">
+    <div class="brand"><div class="mk">HR</div><div><b>New Hire Onboarding Check</b><span>Process guide</span></div></div>
+    <div class="pg"><b>01</b> / 03</div>
+  </div>
+
+  <div class="title">
+    <h2>Two short check-ins in a new hire's first three months</h2>
+    <p>We check in with every new hire at Day 30 and Day 90 to confirm we hired well, see how each person is settling in, and keep improving hiring and onboarding.</p>
+  </div>
+
+  <div>
+    <div class="label">The process at a glance</div>
+    <div class="tl">
+      <div class="tp"><i>Day 0</i><b>Start date</b><span>New hire joins</span></div>
+      <div class="tp rd"><i>Day 30</i><b>Round 1</b><span>Hiring Quality Check</span></div>
+      <div class="tp rd"><i>Day 90</i><b>Round 2</b><span>Onboarding Check</span></div>
+    </div>
+  </div>
+
+  <div class="rounds">
+    <div class="rc">
+      <div class="tag">Round 1 | About 1 month after joining</div>
+      <h3>Did we hire well?</h3>
+      <div class="q">A quick check on the hiring experience and the first month on the job.</div>
+      <div class="row"><span class="rolechip nh">New hire</span><span class="t">Answers a short survey</span><em>about 5 min</em></div>
+      <div class="row"><span class="rolechip hm">Hiring manager</span><span class="t">Reviews the hire</span><em>about 10 min</em></div>
+    </div>
+    <div class="rc">
+      <div class="tag">Round 2 | About 3 months after joining</div>
+      <h3>How are they settling in?</h3>
+      <div class="q">A check on adaptation and performance, finished with an executive sign-off.</div>
+      <div class="row"><span class="rolechip nh">New hire</span><span class="t">Answers a survey and writes a self-assessment</span><em>5 to 10 min</em></div>
+      <div class="row"><span class="rolechip hm">Hiring manager</span><span class="t">Gives feedback, then rates 7 items</span><em>about 10 min</em></div>
+      <div class="row"><span class="rolechip ex">Executive</span><span class="t">Gives the final approval</span><em>about 5 min</em></div>
+    </div>
+  </div>
+
+  <div>
+    <div class="label">How it works for everyone</div>
+    <div class="steps">
+      <div class="step"><div class="n">1</div><div><b>Get an email</b><span>One email with your personal link.</span></div></div>
+      <div class="step"><div class="n">2</div><div><b>Open My Tasks</b><span>Your steps and due dates, all in one place.</span></div></div>
+      <div class="step"><div class="n">3</div><div><b>Finish your steps</b><span>Responses go straight to Talent Development. The next person's step opens automatically.</span></div></div>
+    </div>
+  </div>
+
+  <div class="foot">Questions: Talent Development Team</div>
+</section>
+
+<!-- ============ PAGE 2: who does what ============ -->
+<section class="page">
+  <div class="top">
+    <div class="brand"><div class="mk">HR</div><div><b>New Hire Onboarding Check</b><span>Process guide</span></div></div>
+    <div class="pg"><b>02</b> / 03</div>
+  </div>
+
+  <div class="title">
+    <h2>Who does what</h2>
+    <p>Round 1 is a single step for each person. In Round 2 the work passes from the new hire to the hiring manager to the executive, and each person notifies the next one by email.</p>
+  </div>
+
+  <div>
+    <div class="label">Round 1</div>
+    <div class="r1box">
+      <span class="rt">Day 30</span>
+      <div class="lane"><span class="rolechip nh">New hire</span>Answers the hiring quality survey. Done once submitted.</div>
+      <div class="lane"><span class="rolechip hm">Hiring manager</span>Reviews each new hire. Done once submitted.</div>
+    </div>
+  </div>
+
+  <div style="flex:1;display:flex;flex-direction:column;gap:10px;min-height:0">
+    <div class="label" style="margin-bottom:0">Round 2: the hand-off</div>
+    <div class="flow">
+      <div class="col nh"><div class="ch"><span class="cn">1</span><b>New hire</b></div><div class="cb">
+        <div class="task"><h4>Survey and self-assessment</h4><ol>
+          <li>Open My Tasks from the email</li>
+          <li>Answer the survey and write the self-assessment</li>
+          <li class="done">Done once you notify your manager</li></ol></div>
+      </div></div>
+      <div class="hand"><div class="env"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div><b>Email</b><small>The next step opens automatically</small></div>
+      <div class="col hm"><div class="ch"><span class="cn">2</span><b>Hiring manager</b></div><div class="cb">
+        <div class="task"><h4>Self-assessment feedback</h4><ol>
+          <li>Open the new hire's email</li>
+          <li>Write feedback, then meet and sign</li>
+          <li class="done">Done once submitted</li></ol></div>
+        <div class="task"><h4>Rate 7 items and request approval</h4><ol>
+          <li>Rate each item and submit</li>
+          <li class="done">Done once you notify the executive</li></ol>
+          <div class="note">No need to wait for the new hire's email. You can start right away.</div></div>
+      </div></div>
+      <div class="hand"><div class="env"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></div><b>Email</b><small>The next step opens automatically</small></div>
+      <div class="col ex"><div class="ch"><span class="cn">3</span><b>Executive</b></div><div class="cb">
+        <div class="task"><h4>Final approval</h4><ol>
+          <li>Open the manager's email</li>
+          <li>Review the ratings, add your score and comments, and sign</li>
+          <li class="done">Done once submitted</li></ol></div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="how">
+    <h4>How to notify the next person<small>Shown right after you submit</small></h4>
+    <ol>
+      <li><span class="n">1</span><span>Click <span class="btn">Open draft in Outlook</span></span></li>
+      <li><span class="n">2</span><span>Open the downloaded file to get a ready-made email</span></li>
+      <li><span class="n">3</span><span>Check it and send. No luck? Use <span class="btn gh">Copy email text</span> and paste it into a new email.</span></li>
+    </ol>
+  </div>
+
+  <div class="foot">Questions: Talent Development Team</div>
+</section>
+
+<!-- ============ PAGE 3: using My Tasks ============ -->
+<section class="page">
+  <div class="top">
+    <div class="brand"><div class="mk">HR</div><div><b>New Hire Onboarding Check</b><span>Process guide</span></div></div>
+    <div class="pg"><b>03</b> / 03</div>
+  </div>
+
+  <div class="title">
+    <h2>Using My Tasks</h2>
+    <p>My Tasks is your starting point. It shows what to do now, what is coming up, and what is done.</p>
+  </div>
+
+  <div class="p3">
+    <div>
+      <div class="label">Example: a hiring manager's page</div>
+      <div class="mock"><div class="mcard">
+        <div class="mb"><div class="mk">HR</div><div><b>New Hire Onboarding Check</b><span>Talent Development Team</span></div></div>
+        <div class="mh">My Tasks for James Choi (Hiring Manager)</div>
+        <div class="mp">Everything you need to do is listed here. When a step is finished, the next one opens automatically.</div>
+        <div class="mpg"><span>1 of 3 steps done</span><div class="bar"><i></i></div></div>
+        <div class="mg"><h5>To do (1)</h5>
+          <div class="mt"><div class="no">1</div><div class="bd"><div class="ti">Round 2: Manager Review and Approval Request for Grace Lee</div><div class="me"><span class="chip go">To do</span><span class="chip due">Due Oct 28 (4 days left)</span></div></div><div class="mbtn">Start</div></div></div>
+        <div class="mg"><h5>Coming up (1)</h5>
+          <div class="mt wait"><div class="no">1</div><div class="bd"><div class="ti">Round 2: Self-assessment Feedback for Grace Lee</div><div class="me"><span class="chip wt">Waiting</span>Opens when Grace Lee submits the self-assessment</div></div><div class="mbtn off">Not open yet</div></div></div>
+        <div class="mg"><h5>Completed steps (1)</h5>
+          <div class="mt dn"><div class="no">1</div><div class="bd"><div class="ti">Round 1: Hiring Quality Review for Daniel Kim</div><div class="me"><span class="chip go">Done</span>Responses cannot be viewed after submission</div></div></div></div>
+      </div></div>
+    </div>
+
+    <div>
+      <div class="label">Good to know</div>
+      <div class="tips">
+        <div class="tip warn"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg></div>
+          <div><h4>Links close after the due date</h4><p>Due dates appear in the <b>email</b> and in <b>My Tasks</b>, and turn red when close.</p></div></div>
+        <div class="tip"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12l5 5L20 7"/></svg></div>
+          <div><h4>Submit once</h4><p>Wait for the confirmation screen. To change an answer later, ask the <b>Talent Development Team</b> to reopen it with your earlier answers filled in.</p></div></div>
+        <div class="tip"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7M21 4v5h-5"/></svg></div>
+          <div><h4>The next step opens by itself</h4><p>Keep My Tasks open and it refreshes every 30 seconds. If it loads slowly, wait up to a minute.</p></div></div>
+        <div class="tip"><div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></div>
+          <div><h4>Use your own link, on any device</h4><p>Open the link next to <b>your name</b> in the email. It works on a computer or a phone. On a phone, the notification email cannot be drafted automatically, so copy the text instead.</p></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">Questions: Talent Development Team</div>
+</section>
+
+</body>
+</html>
